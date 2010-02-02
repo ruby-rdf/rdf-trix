@@ -9,7 +9,7 @@ module RDF::TriX
   #   RDF::Format.for(:file_extension => "xml")
   #   RDF::Format.for(:content_type   => "application/trix")
   #
-  # @see http://swdev.nokia.com/trix/trix.html
+  # @see http://www.w3.org/2004/03/trix/
   class Format < RDF::Format
     content_type     'application/trix', :extension => :xml
     content_encoding 'utf-8'

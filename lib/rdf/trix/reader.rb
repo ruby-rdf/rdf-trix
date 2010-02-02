@@ -24,7 +24,7 @@ module RDF::TriX
   #     end
   #   end
   #
-  # @see http://swdev.nokia.com/trix/trix.html
+  # @see http://www.w3.org/2004/03/trix/
   class Reader < RDF::Reader
     format RDF::TriX::Format
 

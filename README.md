@@ -52,4 +52,4 @@ License
 information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
 
 [RDF.rb]: http://rdf.rubyforge.org/
-[TriX]:   http://swdev.nokia.com/trix/trix.html
+[TriX]:   http://www.w3.org/2004/03/trix/

@@ -22,6 +22,7 @@ module RDF
   #   end
   #
   # @see http://rdf.rubyforge.org/
+  # @see http://www.w3.org/2004/03/trix/
   # @see http://swdev.nokia.com/trix/trix.html
   #
   # @author [Arto Bendiken](http://ar.to/)
