@@ -25,7 +25,7 @@ module RDF::TriX
   #
   # @see http://www.w3.org/2004/03/trix/
   class Writer < RDF::Writer
-    format RDF::TriX::Format
+    format  RDF::TriX::Format
     include Nokogiri
 
     ##
