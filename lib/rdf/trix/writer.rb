@@ -29,12 +29,16 @@ module RDF::TriX
     include Nokogiri
 
     ##
-    # @param  [IO] output
+    # Initializes the TriX writer instance.
+    #
+    # @param  [IO, File] output
     # @param  [Hash{Symbol => Object}] options
-    # @yield
+    # @option options [String, #to_s] :encoding ('utf-8')
+    # @yield  [writer]
+    # @yieldparam [Writer] writer
     def initialize(output = $stdout, options = {}, &block)
       @xml = XML::Document.new
-      @xml.encoding = 'utf-8'
+      @xml.encoding = (options[:encoding] || 'utf-8').to_s
       super
     end
 
@@ -74,6 +78,7 @@ module RDF::TriX
     # @return [void]
     def write_epilogue
       puts @xml.to_xml
+      @xml = @trix = @graph = nil
     end
 
     ##
@@ -99,6 +104,9 @@ module RDF::TriX
     # @return [Nokogiri::XML::Element]
     def format_node(value, options = {})
       create_element(:id) do |element|
+        # TODO: should we be relying on object identity instead of on the
+        # specified blank node identifier as we're doing now? That is,
+        # is `RDF::Node.new(1) != RDF::Node.new(1)` to be true or false?
         element.content = value.id.to_s
       end
     end
@@ -142,7 +150,8 @@ module RDF::TriX
     end
 
     ##
-    # Creates an XML element.
+    # Creates an XML element of the given `name`, with optional given
+    # `attributes`.
     #
     # @param  [Symbol, String, #to_s]  name
     # @param  [Hash{Symbol => Object}] attributes
