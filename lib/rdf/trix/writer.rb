@@ -175,7 +175,7 @@ module RDF::TriX
       # @return [void]
       def initialize_xml(options = {})
         require 'rexml/document' unless defined?(::REXML)
-        @xml = ::REXML::Document.new
+        @xml = ::REXML::Document.new(nil, :attribute_quote => :quote)
         @xml << ::REXML::XMLDecl.new(::REXML::XMLDecl::DEFAULT_VERSION, @encoding)
       end
 
@@ -220,7 +220,7 @@ module RDF::TriX
       # @yieldparam [Nokogiri::XML::Element] element
       # @return [REXML::Element]
       def create_element(name, content = nil, attributes = {}, &block)
-        element = @graph.add_element(name.to_s)
+        element = ::REXML::Element.new(name.to_s, nil, @xml.context)
         attributes.each { |k, v| element.add_attribute(k.to_s, v) }
         element.text = content.to_s unless content.nil?
         block.call(element) if block_given?
