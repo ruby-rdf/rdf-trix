@@ -18,7 +18,8 @@ Dependencies
 ------------
 
 * [RDF.rb](http://gemcutter.org/gems/rdf) (>= 0.0.9)
-* [REXML](http://ruby-doc.org/stdlib/libdoc/rexml/rdoc/) (>= 3.1.7) or
+* [REXML](http://ruby-doc.org/stdlib/libdoc/rexml/rdoc/) (>= 3.1.7),
+  [LibXML-Ruby](http://gemcutter.org/gems/libxml-ruby) (>= 1.1.3), or
   [Nokogiri](http://gemcutter.org/gems/nokogiri) (>= 1.4.1)
 
 Installation
