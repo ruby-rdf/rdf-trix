@@ -13,8 +13,8 @@ module RDF::TriX
   #
   # @example Obtaining a TriX reader class
   #   RDF::Reader.for(:trix)         #=> RDF::TriX::Reader
-  #   RDF::Reader.for("spec/data/test.xml")
-  #   RDF::Reader.for(:file_name      => "spec/data/test.xml")
+  #   RDF::Reader.for("spec/data/examples.xml")
+  #   RDF::Reader.for(:file_name      => "spec/data/examples.xml")
   #   RDF::Reader.for(:file_extension => "xml")
   #   RDF::Reader.for(:content_type   => "application/trix")
   #

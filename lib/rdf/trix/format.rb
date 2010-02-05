@@ -4,8 +4,8 @@ module RDF::TriX
   #
   # @example Obtaining a TriX format class
   #   RDF::Format.for(:trix)         #=> RDF::TriX::Format
-  #   RDF::Format.for("spec/data/test.xml")
-  #   RDF::Format.for(:file_name      => "spec/data/test.xml")
+  #   RDF::Format.for("spec/data/examples.xml")
+  #   RDF::Format.for(:file_name      => "spec/data/examples.xml")
   #   RDF::Format.for(:file_extension => "xml")
   #   RDF::Format.for(:content_type   => "application/trix")
   #
