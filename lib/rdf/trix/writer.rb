@@ -193,7 +193,9 @@ module RDF::TriX
       #
       # @return [void]
       def write_epilogue
-        @xml.write(@output, @options[:indent] || 2)
+        formatter = ::REXML::Formatters::Pretty.new((@options[:indent] || 2).to_i, false)
+        formatter.compact = true
+        formatter.write(@xml, @output)
         puts # add a line break after the last line
         @xml = @trix = @graph = nil
       end
@@ -220,7 +222,7 @@ module RDF::TriX
       def create_element(name, content = nil, attributes = {}, &block)
         element = @graph.add_element(name.to_s)
         attributes.each { |k, v| element.add_attribute(k.to_s, v) }
-        element.add_text(content.to_s) unless content.nil?
+        element.text = content.to_s unless content.nil?
         block.call(element) if block_given?
         element
       end
