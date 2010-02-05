@@ -59,7 +59,7 @@ module RDF::TriX
     # @yieldparam [Reader] reader
     def initialize(input = $stdin, options = {}, &block)
       super do
-        @implementation = case library = options[:library]
+        @implementation = case (library = options[:library])
           when nil
             # Use Nokogiri when available, but fall back to REXML otherwise:
             begin
@@ -73,8 +73,34 @@ module RDF::TriX
           else raise ArgumentError.new("expected :rexml or :nokogiri, got #{library.inspect}")
         end
         self.extend(@implementation)
-        initialize_xml
+        initialize_xml(options)
         block.call(self) if block_given?
+      end
+    end
+
+    ##
+    # Returns the RDF value of the given TriX element.
+    #
+    # @param  [String] name
+    # @param  [Hash{String => Object}] attributes
+    # @param  [String] content
+    # @return [RDF::Value]
+    def parse_element(name, attributes, content)
+      case name.to_sym
+        when :id
+          RDF::Node.new(content.strip)
+        when :uri
+          RDF::URI.new(content.strip)
+        when :typedLiteral
+          RDF::Literal.new(content, :datatype => attributes['datatype'])
+        when :plainLiteral
+          if lang = attributes['xml:lang'] || attributes['lang']
+            RDF::Literal.new(content, :language => lang)
+          else
+            RDF::Literal.new(content)
+          end
+        else
+          # TODO: raise error
       end
     end
 
@@ -94,8 +120,9 @@ module RDF::TriX
       ##
       # Initializes the underlying XML library.
       #
+      # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml
+      def initialize_xml(options = {})
         require 'rexml/document' unless defined?(::REXML)
         @xml = ::REXML::Document.new(@input, :compress_whitespace => %w{uri})
       end
@@ -134,8 +161,9 @@ module RDF::TriX
       ##
       # Initializes the underlying XML library.
       #
+      # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml
+      def initialize_xml(options = {})
         require 'nokogiri' unless defined?(::Nokogiri)
         @xml = ::Nokogiri::XML(@input)
       end
@@ -158,32 +186,6 @@ module RDF::TriX
             block.call(*triple)
           end
         end
-      end
-    end
-
-    ##
-    # Returns the RDF value of the given TriX element.
-    #
-    # @param  [String] name
-    # @param  [Hash{String => Object}] attributes
-    # @param  [String] content
-    # @return [RDF::Value]
-    def parse_element(name, attributes, content)
-      case name.to_sym
-        when :id
-          RDF::Node.new(content.strip)
-        when :uri
-          RDF::URI.new(content.strip)
-        when :typedLiteral
-          RDF::Literal.new(content, :datatype => attributes['datatype'])
-        when :plainLiteral
-          if lang = attributes['xml:lang'] || attributes['lang']
-            RDF::Literal.new(content, :language => lang)
-          else
-            RDF::Literal.new(content)
-          end
-        else
-          # TODO: raise error
       end
     end
   end # class Reader
