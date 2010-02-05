@@ -2,12 +2,27 @@ module RDF::TriX
   ##
   # TriX parser.
   #
+  # This class supports both [REXML][] and [Nokogiri][] for XML processing,
+  # and will automatically select the most performant implementation
+  # (Nokogiri) when it is available. If need be, you can explicitly
+  # override the used implementation by passing in a `:library` option to
+  # `Reader.new` or `Reader.open`.
+  #
+  # [REXML]:    http://www.germane-software.com/software/rexml/
+  # [Nokogiri]: http://nokogiri.org/
+  #
   # @example Obtaining a TriX reader class
   #   RDF::Reader.for(:trix)         #=> RDF::TriX::Reader
   #   RDF::Reader.for("spec/data/test.xml")
   #   RDF::Reader.for(:file_name      => "spec/data/test.xml")
   #   RDF::Reader.for(:file_extension => "xml")
   #   RDF::Reader.for(:content_type   => "application/trix") 
+  #
+  # @example Instantiating a REXML-based reader
+  #   RDF::TriX::Reader.new(input, :library => :rexml)
+  #
+  # @example Instantiating a Nokogiri-based reader
+  #   RDF::TriX::Reader.new(input, :library => :nokogiri)
   #
   # @example Parsing RDF statements from a TriX file
   #   RDF::TriX::Reader.open("spec/data/test.xml") do |reader|
