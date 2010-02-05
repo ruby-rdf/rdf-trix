@@ -44,10 +44,8 @@ module RDF::TriX
     # @yieldparam [Reader] reader
     def initialize(input = $stdin, options = {}, &block)
       super do
-        @implementation = case options[:library]
-          when :rexml    then REXML
-          when :nokogiri then Nokogiri
-          else
+        @implementation = case library = options[:library]
+          when nil
             # Use Nokogiri when available, but fall back to REXML otherwise:
             begin
               require 'nokogiri'
@@ -55,6 +53,9 @@ module RDF::TriX
             rescue LoadError => e
               REXML
             end
+          when :rexml    then REXML
+          when :nokogiri then Nokogiri
+          else raise ArgumentError.new("expected :rexml or :nokogiri, got #{library.inspect}")
         end
         self.extend(@implementation)
         initialize_xml
