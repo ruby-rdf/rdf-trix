@@ -26,8 +26,7 @@ module RDF::TriX
   #
   # @see http://www.w3.org/2004/03/trix/
   class Reader < RDF::Reader
-    format  RDF::TriX::Format
-    include Nokogiri
+    format RDF::TriX::Format
 
     ##
     # Initializes the TriX reader instance.
@@ -38,27 +37,75 @@ module RDF::TriX
     # @yieldparam [Reader] reader
     def initialize(input = $stdin, options = {}, &block)
       super do
-        @xml = Nokogiri::XML(@input.read)
+        self.extend case options[:library]
+          when :rexml    then REXML
+          when :nokogiri then Nokogiri
+          else Nokogiri # FIXME: REXML # the safe default
+        end
+        initialize_xml
         block.call(self) if block_given?
       end
     end
 
     ##
-    # Enumerates each triple in the TriX stream.
+    # REXML implementation of the TriX reader.
     #
-    # @todo   Support named graphs.
-    # @yield  [subject, predicate, object]
-    # @yieldparam [RDF::Resource] subject
-    # @yieldparam [RDF::URI]      predicate
-    # @yieldparam [RDF::Value]    object
-    # @return [Enumerator]
-    def each_triple(&block)
-      options = {'trix' => Format::XMLNS}
-      @xml.xpath('//trix:graph', options).each do |graph|
-        graph.xpath('./trix:triple', options).each do |triple|
-          triple = triple.children.select { |value| value.element? }
-          triple = triple.map { |value| parse_value(value) }
-          block.call(*triple)
+    # @see http://www.germane-software.com/software/rexml/
+    module REXML
+      ##
+      # Initializes the underlying XML library.
+      #
+      # @return [void]
+      def initialize_xml
+        require 'rexml/document' unless defined?(::REXML)
+        # TODO
+      end
+
+      ##
+      # Enumerates each triple in the TriX stream.
+      #
+      # @todo   Support named graphs.
+      # @yield  [subject, predicate, object]
+      # @yieldparam [RDF::Resource] subject
+      # @yieldparam [RDF::URI]      predicate
+      # @yieldparam [RDF::Value]    object
+      # @return [Enumerator]
+      def each_triple(&block)
+        # TODO
+      end
+    end
+
+    ##
+    # Nokogiri implementation of the TriX reader.
+    #
+    # @see http://nokogiri.org/
+    module Nokogiri
+      ##
+      # Initializes the underlying XML library.
+      #
+      # @return [void]
+      def initialize_xml
+        require 'nokogiri' unless defined?(::Nokogiri)
+        @xml = ::Nokogiri::XML(@input.read)
+      end
+
+      ##
+      # Enumerates each triple in the TriX stream.
+      #
+      # @todo   Support named graphs.
+      # @yield  [subject, predicate, object]
+      # @yieldparam [RDF::Resource] subject
+      # @yieldparam [RDF::URI]      predicate
+      # @yieldparam [RDF::Value]    object
+      # @return [Enumerator]
+      def each_triple(&block)
+        options = {'trix' => Format::XMLNS}
+        @xml.xpath('//trix:graph', options).each do |graph|
+          graph.xpath('./trix:triple', options).each do |triple|
+            triple = triple.children.select { |value| value.element? }
+            triple = triple.map { |element| parse_element(element.name, element, element.content) }
+            block.call(*triple)
+          end
         end
       end
     end
@@ -66,21 +113,23 @@ module RDF::TriX
     ##
     # Returns the RDF value of the given TriX element.
     #
-    # @param  [Nokogiri::XML::Element] element
+    # @param  [String] name
+    # @param  [Hash{String => Object}] attributes
+    # @param  [String] content
     # @return [RDF::Value]
-    def parse_value(element)
-      case element.name.to_sym
+    def parse_element(name, attributes, content)
+      case name.to_sym
         when :id
-          RDF::Node.new(element.content.strip)
+          RDF::Node.new(content.strip)
         when :uri
-          RDF::URI.new(element.content.strip)
+          RDF::URI.new(content.strip)
         when :typedLiteral
-          RDF::Literal.new(element.content, :datatype => element[:datatype])
+          RDF::Literal.new(content, :datatype => attributes['datatype'])
         when :plainLiteral
-          if lang = element['lang']
-            RDF::Literal.new(element.content, :language => lang)
+          if lang = attributes['xml:lang'] || attributes['lang']
+            RDF::Literal.new(content, :language => lang)
           else
-            RDF::Literal.new(element.content)
+            RDF::Literal.new(content)
           end
         else
           # TODO: raise error
