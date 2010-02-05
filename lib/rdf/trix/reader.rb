@@ -63,26 +63,34 @@ module RDF::TriX
     # @yieldparam [Reader] reader
     def initialize(input = $stdin, options = {}, &block)
       super do
-        @implementation = case (library = options[:library])
+        @library = case options[:library]
           when nil
             # Use Nokogiri or LibXML when available, and REXML otherwise:
             begin
               require 'nokogiri'
-              Nokogiri
+              :nokogiri
             rescue LoadError => e
               begin
                 require 'libxml'
-                LibXML
+                :libxml
               rescue LoadError => e
-                REXML
+                :rexml
               end
             end
+          when :nokogiri, :libxml, :rexml
+            options[:library]
+          else
+            raise ArgumentError.new("expected :rexml, :libxml or :nokogiri, but got #{options[:library].inspect}")
+        end
+
+        require "rdf/trix/reader/#{@library}"
+        @implementation = case @library
           when :nokogiri then Nokogiri
           when :libxml   then LibXML
           when :rexml    then REXML
-          else raise ArgumentError.new("expected :rexml, :libxml or :nokogiri, got #{library.inspect}")
         end
         self.extend(@implementation)
+
         initialize_xml(options)
         block.call(self) if block_given?
       end
@@ -113,138 +121,5 @@ module RDF::TriX
           # TODO: raise error
       end
     end
-
-    ##
-    # REXML implementation of the TriX reader.
-    #
-    # @see http://www.germane-software.com/software/rexml/
-    module REXML
-      ##
-      # Returns the name of the underlying XML library.
-      #
-      # @return [Symbol]
-      def self.library
-        :rexml
-      end
-
-      ##
-      # Initializes the underlying XML library.
-      #
-      # @param  [Hash{Symbol => Object}] options
-      # @return [void]
-      def initialize_xml(options = {})
-        require 'rexml/document' unless defined?(::REXML)
-        @xml = ::REXML::Document.new(@input, :compress_whitespace => %w{uri})
-      end
-
-      ##
-      # Enumerates each triple in the TriX stream.
-      #
-      # @todo   Support named graphs.
-      # @yield  [subject, predicate, object]
-      # @yieldparam [RDF::Resource] subject
-      # @yieldparam [RDF::URI]      predicate
-      # @yieldparam [RDF::Value]    object
-      # @return [Enumerator]
-      def each_triple(&block)
-        @xml.elements.each('TriX/graph/triple') do |triple|
-          triple = triple.select { |node| node.kind_of?(::REXML::Element) }[0..2]
-          triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }
-          block.call(*triple)
-        end
-      end
-    end # module REXML
-
-    ##
-    # LibXML-Ruby implementation of the TriX reader.
-    #
-    # @see http://libxml.rubyforge.org/rdoc/
-    module LibXML
-      ##
-      # Returns the name of the underlying XML library.
-      #
-      # @return [Symbol]
-      def self.library
-        :libxml
-      end
-
-      ##
-      # Initializes the underlying XML library.
-      #
-      # @param  [Hash{Symbol => Object}] options
-      # @return [void]
-      def initialize_xml(options = {})
-        require 'libxml' unless defined?(::LibXML)
-        @xml = case @input
-          when File   then ::LibXML::XML::Document.file(@input.path)
-          when IO     then ::LibXML::XML::Document.io(@input)
-          else ::LibXML::XML::Document.string(@input.to_s)
-        end
-      end
-
-      ##
-      # Enumerates each triple in the TriX stream.
-      #
-      # @todo   Support named graphs.
-      # @yield  [subject, predicate, object]
-      # @yieldparam [RDF::Resource] subject
-      # @yieldparam [RDF::URI]      predicate
-      # @yieldparam [RDF::Value]    object
-      # @return [Enumerator]
-      def each_triple(&block)
-        options = {'trix' => Format::XMLNS}
-        @xml.find('//trix:graph', options).each do |graph|
-          graph.find('./trix:triple', options).each do |triple|
-            triple = triple.children.select { |node| node.element? }[0..2]
-            triple = triple.map { |element| parse_element(element.name, element.attributes, element.content) }
-            block.call(*triple)
-          end
-        end
-      end
-    end # module LibXML
-
-    ##
-    # Nokogiri implementation of the TriX reader.
-    #
-    # @see http://nokogiri.org/
-    module Nokogiri
-      ##
-      # Returns the name of the underlying XML library.
-      #
-      # @return [Symbol]
-      def self.library
-        :nokogiri
-      end
-
-      ##
-      # Initializes the underlying XML library.
-      #
-      # @param  [Hash{Symbol => Object}] options
-      # @return [void]
-      def initialize_xml(options = {})
-        require 'nokogiri' unless defined?(::Nokogiri)
-        @xml = ::Nokogiri::XML(@input)
-      end
-
-      ##
-      # Enumerates each triple in the TriX stream.
-      #
-      # @todo   Support named graphs.
-      # @yield  [subject, predicate, object]
-      # @yieldparam [RDF::Resource] subject
-      # @yieldparam [RDF::URI]      predicate
-      # @yieldparam [RDF::Value]    object
-      # @return [Enumerator]
-      def each_triple(&block)
-        options = {'trix' => Format::XMLNS}
-        @xml.xpath('//trix:graph', options).each do |graph|
-          graph.xpath('./trix:triple', options).each do |triple|
-            triple = triple.children.select { |node| node.element? }[0..2]
-            triple = triple.map { |element| parse_element(element.name, element, element.content) }
-            block.call(*triple)
-          end
-        end
-      end
-    end # module Nokogiri
   end # class Reader
 end # module RDF::TriX
