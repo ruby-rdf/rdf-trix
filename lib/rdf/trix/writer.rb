@@ -26,7 +26,6 @@ module RDF::TriX
   # @see http://www.w3.org/2004/03/trix/
   class Writer < RDF::Writer
     format  RDF::TriX::Format
-    include Nokogiri
 
     ##
     # Initializes the TriX writer instance.
@@ -38,7 +37,7 @@ module RDF::TriX
     # @yieldparam [Writer] writer
     def initialize(output = $stdout, options = {}, &block)
       require 'nokogiri' unless defined?(::Nokogiri)
-      @xml = XML::Document.new
+      @xml = ::Nokogiri::XML::Document.new
       @xml.encoding = (options[:encoding] || 'utf-8').to_s
       super
     end
@@ -59,7 +58,7 @@ module RDF::TriX
     # @param  [String, #to_s] text
     # @return [void]
     def write_comment(text)
-      @graph << XML::Comment.new(@xml, text.to_s)
+      @graph << ::Nokogiri::XML::Comment.new(@xml, text.to_s)
     end
 
     ##
