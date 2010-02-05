@@ -28,7 +28,6 @@ module RDF
   #
   # @author [Arto Bendiken](http://ar.to/)
   module TriX
-    require 'nokogiri'
     require 'rdf/trix/format'
     autoload :Reader,  'rdf/trix/reader'
     autoload :Writer,  'rdf/trix/writer'

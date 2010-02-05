@@ -37,6 +37,7 @@ module RDF::TriX
     # @yield  [writer]
     # @yieldparam [Writer] writer
     def initialize(output = $stdout, options = {}, &block)
+      require 'nokogiri' unless defined?(::Nokogiri)
       @xml = XML::Document.new
       @xml.encoding = (options[:encoding] || 'utf-8').to_s
       super

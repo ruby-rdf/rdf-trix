@@ -17,8 +17,6 @@ module RDF::TriX
     reader { RDF::TriX::Reader }
     writer { RDF::TriX::Writer }
 
-    require 'nokogiri'
-
     XMLNS = 'http://www.w3.org/2004/03/trix/trix-1/'
   end # class Format
 end # module RDF::TriX
