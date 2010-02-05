@@ -43,12 +43,19 @@ module RDF::TriX
     format RDF::TriX::Format
 
     ##
+    # Returns the XML implementation module for this writer instance.
+    #
+    # @return [Module]
+    attr_reader :implementation
+
+    ##
     # Initializes the TriX writer instance.
     #
     # @param  [IO, File]               output
     # @param  [Hash{Symbol => Object}] options
     # @option options [Symbol]         :library  (:rexml or :nokogiri)
     # @option options [String, #to_s]  :encoding ('utf-8')
+    # @option options [Integer]        :indent   (2)
     # @yield  [writer]
     # @yieldparam [Writer] writer
     def initialize(output = $stdout, options = {}, &block)
@@ -196,7 +203,7 @@ module RDF::TriX
       #
       # @param  [String, #to_s] text
       # @return [REXML::Comment]
-      def create_comment
+      def create_comment(text)
         ::REXML::Comment.new(text.to_s)
       end
 
@@ -213,7 +220,7 @@ module RDF::TriX
       def create_element(name, content = nil, attributes = {}, &block)
         element = @graph.add_element(name.to_s)
         attributes.each { |k, v| element.add_attribute(k.to_s, v) }
-        element.add_text(content) unless content.nil?
+        element.add_text(content.to_s) unless content.nil?
         block.call(element) if block_given?
         element
       end
@@ -267,7 +274,7 @@ module RDF::TriX
       #
       # @param  [String, #to_s] text
       # @return [Nokogiri::XML::Comment]
-      def create_comment
+      def create_comment(text)
         ::Nokogiri::XML::Comment.new(@xml, text.to_s)
       end
 
@@ -287,7 +294,7 @@ module RDF::TriX
           element.default_namespace = xmlns
         end
         attributes.each { |k, v| element[k.to_s] = v }
-        element.content = content unless content.nil?
+        element.content = content.to_s unless content.nil?
         block.call(element) if block_given?
         element
       end

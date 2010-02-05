@@ -16,7 +16,7 @@ module RDF::TriX
   #   RDF::Reader.for("spec/data/test.xml")
   #   RDF::Reader.for(:file_name      => "spec/data/test.xml")
   #   RDF::Reader.for(:file_extension => "xml")
-  #   RDF::Reader.for(:content_type   => "application/trix") 
+  #   RDF::Reader.for(:content_type   => "application/trix")
   #
   # @example Instantiating a REXML-based reader
   #   RDF::TriX::Reader.new(input, :library => :rexml)
@@ -25,14 +25,14 @@ module RDF::TriX
   #   RDF::TriX::Reader.new(input, :library => :nokogiri)
   #
   # @example Parsing RDF statements from a TriX file
-  #   RDF::TriX::Reader.open("spec/data/test.xml") do |reader|
+  #   RDF::TriX::Reader.open("spec/data/examples.xml") do |reader|
   #     reader.each_statement do |statement|
   #       puts statement.inspect
   #     end
   #   end
   #
   # @example Parsing RDF statements from a TriX string
-  #   data = StringIO.new(File.read("spec/data/test.xml"))
+  #   data = StringIO.new(File.read("spec/data/examples.xml"))
   #   RDF::TriX::Reader.new(data) do |reader|
   #     reader.each_statement do |statement|
   #       puts statement.inspect
@@ -52,9 +52,9 @@ module RDF::TriX
     ##
     # Initializes the TriX reader instance.
     #
-    # @param  [IO, File, String] input
+    # @param  [IO, File, String]       input
     # @param  [Hash{Symbol => Object}] options
-    # @option options [Symbol] :library (:rexml or :nokogiri)
+    # @option options [Symbol]         :library (:rexml or :nokogiri)
     # @yield  [reader]
     # @yieldparam [Reader] reader
     def initialize(input = $stdin, options = {}, &block)
@@ -81,7 +81,7 @@ module RDF::TriX
     ##
     # Returns the RDF value of the given TriX element.
     #
-    # @param  [String] name
+    # @param  [String]                 name
     # @param  [Hash{String => Object}] attributes
     # @param  [String] content
     # @return [RDF::Value]
@@ -181,7 +181,7 @@ module RDF::TriX
         options = {'trix' => Format::XMLNS}
         @xml.xpath('//trix:graph', options).each do |graph|
           graph.xpath('./trix:triple', options).each do |triple|
-            triple = triple.children.select { |node| node.element? }
+            triple = triple.children.select { |node| node.element? }[0..2]
             triple = triple.map { |element| parse_element(element.name, element, element.content) }
             block.call(*triple)
           end
