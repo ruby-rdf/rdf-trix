@@ -25,20 +25,33 @@ module RDF::TriX
   #
   # @see http://www.w3.org/2004/03/trix/
   class Writer < RDF::Writer
-    format  RDF::TriX::Format
+    format RDF::TriX::Format
 
     ##
     # Initializes the TriX writer instance.
     #
-    # @param  [IO, File] output
+    # @param  [IO, File]               output
     # @param  [Hash{Symbol => Object}] options
-    # @option options [String, #to_s] :encoding ('utf-8')
+    # @option options [Symbol]         :library (:rexml or :nokogiri)
+    # @option options [String, #to_s]  :encoding ('utf-8')
     # @yield  [writer]
     # @yieldparam [Writer] writer
     def initialize(output = $stdout, options = {}, &block)
-      require 'nokogiri' unless defined?(::Nokogiri)
-      @xml = ::Nokogiri::XML::Document.new
-      @xml.encoding = (options[:encoding] || 'utf-8').to_s
+      @implementation = case (library = options[:library])
+        when nil
+          # Use Nokogiri when available, but fall back to REXML otherwise:
+          begin
+            require 'nokogiri'
+            Nokogiri
+          rescue LoadError => e
+            REXML
+          end
+        when :nokogiri then Nokogiri
+        when :rexml    then REXML
+        else raise ArgumentError.new("expected :rexml or :nokogiri, got #{library.inspect}")
+      end
+      self.extend(@implementation)
+      initialize_xml(options)
       super
     end
 
@@ -47,7 +60,7 @@ module RDF::TriX
     #
     # @return [void]
     def write_prologue
-      @trix  = create_element(:TriX, :xmlns => Format::XMLNS)
+      @trix  = create_element(:TriX, nil, :xmlns => Format::XMLNS)
       @graph = create_element(:graph)
       @xml << @trix << @graph
     end
@@ -58,7 +71,7 @@ module RDF::TriX
     # @param  [String, #to_s] text
     # @return [void]
     def write_comment(text)
-      @graph << ::Nokogiri::XML::Comment.new(@xml, text.to_s)
+      @graph << create_comment(text)
     end
 
     ##
@@ -77,97 +90,151 @@ module RDF::TriX
     #
     # @return [void]
     def write_epilogue
-      puts @xml.to_xml
+      case
+        when @xml.respond_to?(:to_xml) # Nokogiri
+          puts @xml.to_xml
+        else
+          # TODO
+      end
       @xml = @trix = @graph = nil
     end
 
     ##
     # Returns the TriX representation of a triple.
     #
-    # @param  [RDF::Resource] subject
-    # @param  [RDF::URI]      predicate
-    # @param  [RDF::Value]    object
-    # @return [Nokogiri::XML::Element]
-    def format_triple(subject, predicate, object)
+    # @param  [RDF::Resource]          subject
+    # @param  [RDF::URI]               predicate
+    # @param  [RDF::Value]             object
+    # @param  [Hash{Symbol => Object}] options
+    # @return [Element]
+    def format_triple(subject, predicate, object, options = {})
       create_element(:triple) do |triple|
-        triple << format_value(subject)
-        triple << format_uri(predicate)
-        triple << format_value(object)
+        triple << format_value(subject, options)
+        triple << format_uri(predicate, options)
+        triple << format_value(object, options)
       end
     end
 
     ##
     # Returns the TriX representation of a blank node.
     #
-    # @param  [RDF::Node] value
+    # @param  [RDF::Node]              value
     # @param  [Hash{Symbol => Object}] options
-    # @return [Nokogiri::XML::Element]
+    # @return [Element]
     def format_node(value, options = {})
-      create_element(:id) do |element|
-        # TODO: should we be relying on object identity instead of on the
-        # specified blank node identifier as we're doing now? That is,
-        # is `RDF::Node.new(1) != RDF::Node.new(1)` to be true or false?
-        element.content = value.id.to_s
-      end
+      # TODO: should we be relying on object identity instead of on the
+      # specified blank node identifier as we're doing now? That is,
+      # is `RDF::Node.new(1) != RDF::Node.new(1)` to be true or false?
+      create_element(:id, value.id.to_s)
     end
 
     ##
     # Returns the TriX representation of a URI reference.
     #
-    # @param  [RDF::URI] value
+    # @param  [RDF::URI]               value
     # @param  [Hash{Symbol => Object}] options
-    # @return [Nokogiri::XML::Element]
+    # @return [Element]
     def format_uri(value, options = {})
-      create_element(:uri) do |element|
-        element.content = value.to_s
-      end
+      create_element(:uri, value.to_s)
     end
 
     ##
     # Returns the TriX representation of a literal.
     #
     # @param  [RDF::Literal, String, #to_s] value
-    # @param  [Hash{Symbol => Object}] options
-    # @return [Nokogiri::XML::Element]
+    # @param  [Hash{Symbol => Object}]      options
+    # @return [Element]
     def format_literal(value, options = {})
       value = RDF::Literal.new(value) unless value.is_a?(RDF::Literal)
       case
         when value.datatype? # FIXME: use `has_datatype?` in RDF.rb 0.1.0
-          create_element(:typedLiteral) do |element|
-            element['datatype'] = value.datatype.to_s
-            element.content = value.value.to_s
-          end
+          create_element(:typedLiteral, value.value.to_s, 'datatype' => value.datatype.to_s)
         when value.language? # FIXME: use `has_language?` in RDF.rb 0.1.0
-          create_element(:plainLiteral) do |element|
-            element['xml:lang'] = value.language.to_s
-            element.content = value.value.to_s
-          end
+          create_element(:plainLiteral, value.value.to_s, 'xml:lang' => value.language.to_s)
         else
-          create_element(:plainLiteral) do |element|
-            element.content = value.value.to_s
-          end
+          create_element(:plainLiteral, value.value.to_s)
       end
     end
 
     ##
-    # Creates an XML element of the given `name`, with optional given
-    # `attributes`.
+    # REXML implementation of the TriX writer.
     #
-    # @param  [Symbol, String, #to_s]  name
-    # @param  [Hash{Symbol => Object}] attributes
-    # @yield  [element]
-    # @yieldparam [Nokogiri::XML::Element] element
-    # @return [Nokogiri::XML::Element]
-    def create_element(name, attributes = {}, &block)
-      element = @xml.create_element(name.to_s)
-      if xmlns = attributes.delete(:xmlns)
-        element.default_namespace = xmlns
+    # @see http://www.germane-software.com/software/rexml/
+    module REXML
+      ##
+      # Returns the name of the underlying XML library.
+      #
+      # @return [Symbol]
+      def self.library
+        :rexml
       end
-      attributes.each { |k, v| element[k.to_s] = v }
-      block.call(element) if block_given?
-      element
+
+      ##
+      # Initializes the underlying XML library.
+      #
+      # @param  [Hash{Symbol => Object}] options
+      # @return [void]
+      def initialize_xml(options = {})
+        require 'rexml/document' unless defined?(::REXML)
+        # TODO
+      end
+
+      # TODO
     end
 
-    protected :create_element
+    ##
+    # Nokogiri implementation of the TriX writer.
+    #
+    # @see http://nokogiri.org/
+    module Nokogiri
+      ##
+      # Returns the name of the underlying XML library.
+      #
+      # @return [Symbol]
+      def self.library
+        :nokogiri
+      end
+
+      ##
+      # Initializes the underlying XML library.
+      #
+      # @param  [Hash{Symbol => Object}] options
+      # @return [void]
+      def initialize_xml(options = {})
+        require 'nokogiri' unless defined?(::Nokogiri)
+        @xml = ::Nokogiri::XML::Document.new
+        @xml.encoding = (options[:encoding] || 'utf-8').to_s
+      end
+
+      ##
+      # Creates an XML comment element with the given `text`.
+      #
+      # @param  [String, #to_s] text
+      # @return [Nokogiri::XML::Comment]
+      def create_comment
+        ::Nokogiri::XML::Comment.new(@xml, text.to_s)
+      end
+
+      ##
+      # Creates an XML element of the given `name`, with optional given
+      # `content` and `attributes`.
+      #
+      # @param  [Symbol, String, #to_s]  name
+      # @param  [String, #to_s]          content
+      # @param  [Hash{Symbol => Object}] attributes
+      # @yield  [element]
+      # @yieldparam [Nokogiri::XML::Element] element
+      # @return [Nokogiri::XML::Element]
+      def create_element(name, content = nil, attributes = {}, &block)
+        element = @xml.create_element(name.to_s)
+        if xmlns = attributes.delete(:xmlns)
+          element.default_namespace = xmlns
+        end
+        attributes.each { |k, v| element[k.to_s] = v }
+        element.content = content unless content.nil?
+        block.call(element) if block_given?
+        element
+      end
+    end
   end # class Writer
 end # module RDF::TriX
