@@ -2,12 +2,27 @@ module RDF::TriX
   ##
   # TriX serializer.
   #
+  # This class supports both [REXML][] and [Nokogiri][] for XML processing,
+  # and will automatically select the most performant implementation
+  # (Nokogiri) when it is available. If need be, you can explicitly
+  # override the used implementation by passing in a `:library` option to
+  # `Writer.new` or `Writer.open`.
+  #
+  # [REXML]:    http://www.germane-software.com/software/rexml/
+  # [Nokogiri]: http://nokogiri.org/
+  #
   # @example Obtaining a TriX writer class
   #   RDF::Writer.for(:trix)         #=> RDF::TriX::Writer
   #   RDF::Writer.for("spec/data/test.xml")
   #   RDF::Writer.for(:file_name      => "spec/data/test.xml")
   #   RDF::Writer.for(:file_extension => "xml")
   #   RDF::Writer.for(:content_type   => "application/trix")
+  #
+  # @example Instantiating a REXML-based writer
+  #   RDF::TriX::Writer.new(output, :library => :rexml)
+  #
+  # @example Instantiating a Nokogiri-based writer
+  #   RDF::TriX::Writer.new(output, :library => :nokogiri)
   #
   # @example Serializing RDF statements into a TriX file
   #   RDF::TriX::Writer.open("spec/data/test.xml") do |writer|
