@@ -47,11 +47,12 @@ module RDF::TriX
     #
     # @param  [IO, File]               output
     # @param  [Hash{Symbol => Object}] options
-    # @option options [Symbol]         :library (:rexml or :nokogiri)
+    # @option options [Symbol]         :library  (:rexml or :nokogiri)
     # @option options [String, #to_s]  :encoding ('utf-8')
     # @yield  [writer]
     # @yieldparam [Writer] writer
     def initialize(output = $stdout, options = {}, &block)
+      @encoding = (options[:encoding] || 'utf-8').to_s
       @implementation = case (library = options[:library])
         when nil
           # Use Nokogiri when available, but fall back to REXML otherwise:
@@ -68,16 +69,6 @@ module RDF::TriX
       self.extend(@implementation)
       initialize_xml(options)
       super
-    end
-
-    ##
-    # Generates the TriX root element.
-    #
-    # @return [void]
-    def write_prologue
-      @trix  = create_element(:TriX, nil, :xmlns => Format::XMLNS)
-      @graph = create_element(:graph)
-      @xml << @trix << @graph
     end
 
     ##
@@ -98,20 +89,6 @@ module RDF::TriX
     # @return [void]
     def write_triple(subject, predicate, object)
       @graph << format_triple(subject, predicate, object)
-    end
-
-    ##
-    # Outputs the TriX representation of all stored triples.
-    #
-    # @return [void]
-    def write_epilogue
-      case
-        when @xml.respond_to?(:to_xml) # Nokogiri
-          puts @xml.to_xml
-        else
-          # TODO
-      end
-      @xml = @trix = @graph = nil
     end
 
     ##
@@ -191,10 +168,55 @@ module RDF::TriX
       # @return [void]
       def initialize_xml(options = {})
         require 'rexml/document' unless defined?(::REXML)
-        # TODO
+        @xml = ::REXML::Document.new
+        @xml << ::REXML::XMLDecl.new(::REXML::XMLDecl::DEFAULT_VERSION, @encoding)
       end
 
-      # TODO
+      ##
+      # Generates the TriX root element.
+      #
+      # @return [void]
+      def write_prologue
+        @trix  = @xml.add_element('TriX', 'xmlns' => Format::XMLNS)
+        @graph = @trix.add_element('graph')
+      end
+
+      ##
+      # Outputs the TriX document.
+      #
+      # @return [void]
+      def write_epilogue
+        @xml.write(@output, @options[:indent] || 2)
+        puts # add a line break after the last line
+        @xml = @trix = @graph = nil
+      end
+
+      ##
+      # Creates an XML comment element with the given `text`.
+      #
+      # @param  [String, #to_s] text
+      # @return [REXML::Comment]
+      def create_comment
+        ::REXML::Comment.new(text.to_s)
+      end
+
+      ##
+      # Creates an XML element of the given `name`, with optional given
+      # `content` and `attributes`.
+      #
+      # @param  [Symbol, String, #to_s]  name
+      # @param  [String, #to_s]          content
+      # @param  [Hash{Symbol => Object}] attributes
+      # @yield  [element]
+      # @yieldparam [Nokogiri::XML::Element] element
+      # @return [REXML::Element]
+      def create_element(name, content = nil, attributes = {}, &block)
+        element = @graph.add_element(name.to_s)
+        attributes.each { |k, v| element.add_attribute(k.to_s, v) }
+        element.add_text(content) unless content.nil?
+        block.call(element) if block_given?
+        element
+      end
     end # module REXML
 
     ##
@@ -218,7 +240,26 @@ module RDF::TriX
       def initialize_xml(options = {})
         require 'nokogiri' unless defined?(::Nokogiri)
         @xml = ::Nokogiri::XML::Document.new
-        @xml.encoding = (options[:encoding] || 'utf-8').to_s
+        @xml.encoding = @encoding
+      end
+
+      ##
+      # Generates the TriX root element.
+      #
+      # @return [void]
+      def write_prologue
+        @trix  = create_element(:TriX, nil, :xmlns => Format::XMLNS)
+        @graph = create_element(:graph)
+        @xml << @trix << @graph
+      end
+
+      ##
+      # Outputs the TriX document.
+      #
+      # @return [void]
+      def write_epilogue
+        puts @xml.to_xml
+        @xml = @trix = @graph = nil
       end
 
       ##
