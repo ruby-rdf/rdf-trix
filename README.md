@@ -18,7 +18,8 @@ Dependencies
 ------------
 
 * [RDF.rb](http://gemcutter.org/gems/rdf) (>= 0.0.9)
-* [Nokogiri](http://gemcutter.org/gems/nokogiri) (>= 1.4.1)
+* [REXML](http://www.germane-software.com/software/rexml/) (>= 3.1.7) or
+  [Nokogiri](http://gemcutter.org/gems/nokogiri) (>= 1.4.1)
 
 Installation
 ------------
