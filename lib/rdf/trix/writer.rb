@@ -60,22 +60,36 @@ module RDF::TriX
     # @yield  [writer]
     # @yieldparam [Writer] writer
     def initialize(output = $stdout, options = {}, &block)
-      @encoding = (options[:encoding] || 'utf-8').to_s
-      @implementation = case (library = options[:library])
+      @library = case options[:library]
         when nil
-          # Use Nokogiri when available, but fall back to REXML otherwise:
+          # Use Nokogiri or LibXML when available, and REXML otherwise:
           begin
             require 'nokogiri'
-            Nokogiri
+            :nokogiri
           rescue LoadError => e
-            REXML
+            begin
+              require 'libxml'
+              :rexml # FIXME: no LibXML support implemented yet
+            rescue LoadError => e
+              :rexml
+            end
           end
+        when :libxml then :rexml # FIXME
+        when :nokogiri, :libxml, :rexml
+          options[:library]
+        else
+          raise ArgumentError.new("expected :rexml, :libxml or :nokogiri, but got #{options[:library].inspect}")
+      end
+
+      require "rdf/trix/writer/#{@library}"
+      @implementation = case @library
         when :nokogiri then Nokogiri
-        when :libxml   then REXML # FIXME
+        when :libxml   then LibXML # TODO
         when :rexml    then REXML
-        else raise ArgumentError.new("expected :rexml, :libxml or :nokogiri, got #{library.inspect}")
       end
       self.extend(@implementation)
+
+      @encoding = (options[:encoding] || 'utf-8').to_s
       initialize_xml(options)
       super
     end
@@ -156,152 +170,5 @@ module RDF::TriX
           create_element(:plainLiteral, value.value.to_s)
       end
     end
-
-    ##
-    # REXML implementation of the TriX writer.
-    #
-    # @see http://www.germane-software.com/software/rexml/
-    module REXML
-      ##
-      # Returns the name of the underlying XML library.
-      #
-      # @return [Symbol]
-      def self.library
-        :rexml
-      end
-
-      ##
-      # Initializes the underlying XML library.
-      #
-      # @param  [Hash{Symbol => Object}] options
-      # @return [void]
-      def initialize_xml(options = {})
-        require 'rexml/document' unless defined?(::REXML)
-        @xml = ::REXML::Document.new(nil, :attribute_quote => :quote)
-        @xml << ::REXML::XMLDecl.new(::REXML::XMLDecl::DEFAULT_VERSION, @encoding)
-      end
-
-      ##
-      # Generates the TriX root element.
-      #
-      # @return [void]
-      def write_prologue
-        @trix  = @xml.add_element('TriX', 'xmlns' => Format::XMLNS)
-        @graph = @trix.add_element('graph')
-      end
-
-      ##
-      # Outputs the TriX document.
-      #
-      # @return [void]
-      def write_epilogue
-        formatter = ::REXML::Formatters::Pretty.new((@options[:indent] || 2).to_i, false)
-        formatter.compact = true
-        formatter.write(@xml, @output)
-        puts # add a line break after the last line
-        @xml = @trix = @graph = nil
-      end
-
-      ##
-      # Creates an XML comment element with the given `text`.
-      #
-      # @param  [String, #to_s] text
-      # @return [REXML::Comment]
-      def create_comment(text)
-        ::REXML::Comment.new(text.to_s)
-      end
-
-      ##
-      # Creates an XML element of the given `name`, with optional given
-      # `content` and `attributes`.
-      #
-      # @param  [Symbol, String, #to_s]  name
-      # @param  [String, #to_s]          content
-      # @param  [Hash{Symbol => Object}] attributes
-      # @yield  [element]
-      # @yieldparam [Nokogiri::XML::Element] element
-      # @return [REXML::Element]
-      def create_element(name, content = nil, attributes = {}, &block)
-        element = ::REXML::Element.new(name.to_s, nil, @xml.context)
-        attributes.each { |k, v| element.add_attribute(k.to_s, v) }
-        element.text = content.to_s unless content.nil?
-        block.call(element) if block_given?
-        element
-      end
-    end # module REXML
-
-    ##
-    # Nokogiri implementation of the TriX writer.
-    #
-    # @see http://nokogiri.org/
-    module Nokogiri
-      ##
-      # Returns the name of the underlying XML library.
-      #
-      # @return [Symbol]
-      def self.library
-        :nokogiri
-      end
-
-      ##
-      # Initializes the underlying XML library.
-      #
-      # @param  [Hash{Symbol => Object}] options
-      # @return [void]
-      def initialize_xml(options = {})
-        require 'nokogiri' unless defined?(::Nokogiri)
-        @xml = ::Nokogiri::XML::Document.new
-        @xml.encoding = @encoding
-      end
-
-      ##
-      # Generates the TriX root element.
-      #
-      # @return [void]
-      def write_prologue
-        @trix  = create_element(:TriX, nil, :xmlns => Format::XMLNS)
-        @graph = create_element(:graph)
-        @xml << @trix << @graph
-      end
-
-      ##
-      # Outputs the TriX document.
-      #
-      # @return [void]
-      def write_epilogue
-        puts @xml.to_xml
-        @xml = @trix = @graph = nil
-      end
-
-      ##
-      # Creates an XML comment element with the given `text`.
-      #
-      # @param  [String, #to_s] text
-      # @return [Nokogiri::XML::Comment]
-      def create_comment(text)
-        ::Nokogiri::XML::Comment.new(@xml, text.to_s)
-      end
-
-      ##
-      # Creates an XML element of the given `name`, with optional given
-      # `content` and `attributes`.
-      #
-      # @param  [Symbol, String, #to_s]  name
-      # @param  [String, #to_s]          content
-      # @param  [Hash{Symbol => Object}] attributes
-      # @yield  [element]
-      # @yieldparam [Nokogiri::XML::Element] element
-      # @return [Nokogiri::XML::Element]
-      def create_element(name, content = nil, attributes = {}, &block)
-        element = @xml.create_element(name.to_s)
-        if xmlns = attributes.delete(:xmlns)
-          element.default_namespace = xmlns
-        end
-        attributes.each { |k, v| element[k.to_s] = v }
-        element.content = content.to_s unless content.nil?
-        block.call(element) if block_given?
-        element
-      end
-    end # module Nokogiri
   end # class Writer
 end # module RDF::TriX
