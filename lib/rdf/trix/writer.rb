@@ -195,7 +195,7 @@ module RDF::TriX
       end
 
       # TODO
-    end
+    end # module REXML
 
     ##
     # Nokogiri implementation of the TriX writer.
@@ -250,6 +250,6 @@ module RDF::TriX
         block.call(element) if block_given?
         element
       end
-    end
+    end # module Nokogiri
   end # class Writer
 end # module RDF::TriX

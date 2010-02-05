@@ -68,8 +68,8 @@ module RDF::TriX
             rescue LoadError => e
               REXML
             end
-          when :rexml    then REXML
           when :nokogiri then Nokogiri
+          when :rexml    then REXML
           else raise ArgumentError.new("expected :rexml or :nokogiri, got #{library.inspect}")
         end
         self.extend(@implementation)
@@ -143,7 +143,7 @@ module RDF::TriX
           block.call(*triple)
         end
       end
-    end
+    end # module REXML
 
     ##
     # Nokogiri implementation of the TriX reader.
@@ -187,6 +187,6 @@ module RDF::TriX
           end
         end
       end
-    end
+    end # module Nokogiri
   end # class Reader
 end # module RDF::TriX
