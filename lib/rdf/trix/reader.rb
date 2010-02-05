@@ -29,19 +29,34 @@ module RDF::TriX
     format RDF::TriX::Format
 
     ##
+    # Returns the XML implementation module for this reader instance.
+    #
+    # @return [Module]
+    attr_reader :implementation
+
+    ##
     # Initializes the TriX reader instance.
     #
     # @param  [IO, File, String] input
     # @param  [Hash{Symbol => Object}] options
+    # @option options [Symbol] :library (:rexml or :nokogiri)
     # @yield  [reader]
     # @yieldparam [Reader] reader
     def initialize(input = $stdin, options = {}, &block)
       super do
-        self.extend case options[:library]
+        @implementation = case options[:library]
           when :rexml    then REXML
           when :nokogiri then Nokogiri
-          else Nokogiri # FIXME: REXML # the safe default
+          else
+            # Use Nokogiri when available, but fall back to REXML otherwise:
+            begin
+              require 'nokogiri'
+              Nokogiri
+            rescue LoadError => e
+              REXML
+            end
         end
+        self.extend(@implementation)
         initialize_xml
         block.call(self) if block_given?
       end
@@ -53,12 +68,20 @@ module RDF::TriX
     # @see http://www.germane-software.com/software/rexml/
     module REXML
       ##
+      # Returns the name of the underlying XML library.
+      #
+      # @return [Symbol]
+      def self.library
+        :rexml
+      end
+
+      ##
       # Initializes the underlying XML library.
       #
       # @return [void]
       def initialize_xml
         require 'rexml/document' unless defined?(::REXML)
-        # TODO
+        @xml = ::REXML::Document.new(@input, :compress_whitespace => %w{uri})
       end
 
       ##
@@ -71,7 +94,11 @@ module RDF::TriX
       # @yieldparam [RDF::Value]    object
       # @return [Enumerator]
       def each_triple(&block)
-        # TODO
+        @xml.elements.each('TriX/graph/triple') do |triple|
+          triple = triple.select { |node| node.kind_of?(::REXML::Element) }[0..2]
+          triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }
+          block.call(*triple)
+        end
       end
     end
 
@@ -81,12 +108,20 @@ module RDF::TriX
     # @see http://nokogiri.org/
     module Nokogiri
       ##
+      # Returns the name of the underlying XML library.
+      #
+      # @return [Symbol]
+      def self.library
+        :nokogiri
+      end
+
+      ##
       # Initializes the underlying XML library.
       #
       # @return [void]
       def initialize_xml
         require 'nokogiri' unless defined?(::Nokogiri)
-        @xml = ::Nokogiri::XML(@input.read)
+        @xml = ::Nokogiri::XML(@input)
       end
 
       ##
@@ -102,7 +137,7 @@ module RDF::TriX
         options = {'trix' => Format::XMLNS}
         @xml.xpath('//trix:graph', options).each do |graph|
           graph.xpath('./trix:triple', options).each do |triple|
-            triple = triple.children.select { |value| value.element? }
+            triple = triple.children.select { |node| node.element? }
             triple = triple.map { |element| parse_element(element.name, element, element.content) }
             block.call(*triple)
           end
