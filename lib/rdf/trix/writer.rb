@@ -9,6 +9,7 @@ module RDF::TriX
   # `Writer.new` or `Writer.open`.
   #
   # [REXML]:    http://www.germane-software.com/software/rexml/
+  # [LibXML]:   http://libxml.rubyforge.org/rdoc/
   # [Nokogiri]: http://nokogiri.org/
   #
   # @example Obtaining a TriX writer class
@@ -18,11 +19,11 @@ module RDF::TriX
   #   RDF::Writer.for(:file_extension => "xml")
   #   RDF::Writer.for(:content_type   => "application/trix")
   #
-  # @example Instantiating a REXML-based writer
-  #   RDF::TriX::Writer.new(output, :library => :rexml)
-  #
   # @example Instantiating a Nokogiri-based writer
   #   RDF::TriX::Writer.new(output, :library => :nokogiri)
+  #
+  # @example Instantiating a REXML-based writer
+  #   RDF::TriX::Writer.new(output, :library => :rexml)
   #
   # @example Serializing RDF statements into a TriX file
   #   RDF::TriX::Writer.open("spec/data/output.xml") do |writer|
@@ -53,7 +54,7 @@ module RDF::TriX
     #
     # @param  [IO, File]               output
     # @param  [Hash{Symbol => Object}] options
-    # @option options [Symbol]         :library  (:rexml or :nokogiri)
+    # @option options [Symbol]         :library  (:nokogiri or :rexml)
     # @option options [String, #to_s]  :encoding ('utf-8')
     # @option options [Integer]        :indent   (2)
     # @yield  [writer]
@@ -70,8 +71,9 @@ module RDF::TriX
             REXML
           end
         when :nokogiri then Nokogiri
+        when :libxml   then REXML # FIXME
         when :rexml    then REXML
-        else raise ArgumentError.new("expected :rexml or :nokogiri, got #{library.inspect}")
+        else raise ArgumentError.new("expected :rexml, :libxml or :nokogiri, got #{library.inspect}")
       end
       self.extend(@implementation)
       initialize_xml(options)
