@@ -27,12 +27,12 @@ GEMSPEC = Gem::Specification.new do |gem|
 
   gem.required_ruby_version      = '>= 1.8.2'
   gem.requirements               = ['REXML (>= 3.1.7), LibXML-Ruby (>= 1.1.3) or Nokogiri (>= 1.4.1)']
-  gem.add_development_dependency 'rdf-spec',    '>= 0.0.9'
-  gem.add_development_dependency 'rspec',       '>= 1.2.9'
+  gem.add_development_dependency 'rdf-spec',    '>= 0.1.0'
+  gem.add_development_dependency 'rspec',       '>= 1.3.0'
   gem.add_development_dependency 'yard' ,       '>= 0.5.3'
   gem.add_development_dependency 'nokogiri',    '>= 1.4.1'
   gem.add_development_dependency 'libxml-ruby', '>= 1.1.3'
   gem.add_development_dependency 'rexml',       '>= 3.1.7'
-  gem.add_runtime_dependency     'rdf',         '>= 0.0.9'
+  gem.add_runtime_dependency     'rdf',         '>= 0.1.0'
   gem.post_install_message       = nil
 end
