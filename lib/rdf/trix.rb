@@ -8,14 +8,14 @@ module RDF
   #   require 'rdf/trix'
   #
   # @example Parsing RDF statements from a TriX file
-  #   RDF::TriX::Reader.open("spec/data/examples.xml") do |reader|
+  #   RDF::TriX::Reader.open("etc/doap.xml") do |reader|
   #     reader.each_statement do |statement|
   #       puts statement.inspect
   #     end
   #   end
   #
   # @example Serializing RDF statements into a TriX file
-  #   RDF::TriX::Writer.open("spec/data/output.xml") do |writer|
+  #   RDF::TriX::Writer.open("etc/test.xml") do |writer|
   #     reader.each_statement do |statement|
   #       writer << statement
   #     end

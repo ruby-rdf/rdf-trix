@@ -14,8 +14,8 @@ module RDF::TriX
   #
   # @example Obtaining a TriX reader class
   #   RDF::Reader.for(:trix)         #=> RDF::TriX::Reader
-  #   RDF::Reader.for("spec/data/examples.xml")
-  #   RDF::Reader.for(:file_name      => "spec/data/examples.xml")
+  #   RDF::Reader.for("etc/doap.xml")
+  #   RDF::Reader.for(:file_name      => "etc/doap.xml")
   #   RDF::Reader.for(:file_extension => "xml")
   #   RDF::Reader.for(:content_type   => "application/trix")
   #
@@ -29,14 +29,14 @@ module RDF::TriX
   #   RDF::TriX::Reader.new(input, :library => :rexml)
   #
   # @example Parsing RDF statements from a TriX file
-  #   RDF::TriX::Reader.open("spec/data/examples.xml") do |reader|
+  #   RDF::TriX::Reader.open("etc/doap.xml") do |reader|
   #     reader.each_statement do |statement|
   #       puts statement.inspect
   #     end
   #   end
   #
   # @example Parsing RDF statements from a TriX string
-  #   data = StringIO.new(File.read("spec/data/examples.xml"))
+  #   data = StringIO.new(File.read("etc/doap.xml"))
   #   RDF::TriX::Reader.new(data) do |reader|
   #     reader.each_statement do |statement|
   #       puts statement.inspect
