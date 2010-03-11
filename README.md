@@ -1,8 +1,9 @@
 TriX Support for RDF.rb
 =======================
 
-This is an [RDF.rb][] plugin that adds support for parsing/serializing the
-XML-based [TriX][] serialization format developed by HP Labs and Nokia.
+This is an [RDF.rb][] plugin that adds support for parsing/serializing
+[TriX][], an XML-based RDF serialization format developed by HP Labs and
+Nokia.
 
 * <http://github.com/bendiken/rdf-trix>
 
@@ -17,16 +18,16 @@ Documentation
 Dependencies
 ------------
 
-* [RDF.rb](http://gemcutter.org/gems/rdf) (>= 0.1.0)
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.1.0)
 * [REXML](http://ruby-doc.org/stdlib/libdoc/rexml/rdoc/) (>= 3.1.7),
-  [LibXML-Ruby](http://gemcutter.org/gems/libxml-ruby) (>= 1.1.3), or
-  [Nokogiri](http://gemcutter.org/gems/nokogiri) (>= 1.4.1)
+  [LibXML-Ruby](http://rubygems.org/gems/libxml-ruby) (>= 1.1.3), or
+  [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.4.1)
 
 Installation
 ------------
 
 The recommended installation method is via RubyGems. To install the latest
-official release from Gemcutter, do:
+official release, do:
 
     % [sudo] gem install rdf-trix
 
@@ -53,5 +54,5 @@ License
 `RDF::TriX` is free and unencumbered public domain software. For more
 information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
 
-[RDF.rb]: http://rdf.rubyforge.org/
-[TriX]:   http://www.w3.org/2004/03/trix/
+[RDF.rb]:   http://rdf.rubyforge.org/
+[TriX]:     http://www.w3.org/2004/03/trix/
