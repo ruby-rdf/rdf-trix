@@ -6,3 +6,13 @@ begin
 rescue LoadError => e
 end
 require 'rdf/trix'
+
+desc "Generate etc/doap.{nt,xml} from etc/doap.ttl."
+task :doap do
+  sh "rapper -i turtle -o ntriples etc/doap.ttl | sort > etc/doap.nt"
+  RDF::TriX::Writer.open("etc/doap.xml") do |writer|
+    RDF::NTriples::Reader.open("etc/doap.nt") do |reader|
+      reader.each_statement { |statement| writer << statement }
+    end
+  end
+end
