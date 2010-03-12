@@ -29,9 +29,7 @@ module RDF::TriX
       #
       # @return [void]
       def write_prologue
-        @trix  = create_element(:TriX, nil, :xmlns => Format::XMLNS)
-        @graph = create_element(:graph)
-        @xml << @trix << @graph
+        @xml << (@trix = create_element(:TriX, nil, :xmlns => Format::XMLNS))
       end
 
       ##
@@ -40,7 +38,25 @@ module RDF::TriX
       # @return [void]
       def write_epilogue
         puts @xml.to_xml
-        @xml = @trix = @graph = nil
+        @xml = @trix = nil
+      end
+
+      ##
+      # Creates an XML graph element with the given `name`.
+      #
+      # @param  [RDF::Resource] name
+      # @yield  [element]
+      # @yieldparam [Nokogiri::XML::Element] element
+      # @return [Nokogiri::XML::Element]
+      def create_graph(name = nil, &block)
+        @trix << (graph = create_element(:graph))
+        case name
+          when nil then nil
+          when RDF::Node then graph << create_element(:id, name.to_s) # non-standard
+          else graph << create_element(:uri, name.to_s)
+        end
+        block.call(graph) if block_given?
+        graph
       end
 
       ##

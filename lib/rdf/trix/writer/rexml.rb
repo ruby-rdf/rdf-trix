@@ -29,8 +29,7 @@ module RDF::TriX
       #
       # @return [void]
       def write_prologue
-        @trix  = @xml.add_element('TriX', 'xmlns' => Format::XMLNS)
-        @graph = @trix.add_element('graph')
+        @trix = @xml.add_element('TriX', 'xmlns' => Format::XMLNS)
       end
 
       ##
@@ -42,7 +41,25 @@ module RDF::TriX
         formatter.compact = true
         formatter.write(@xml, @output)
         puts # add a line break after the last line
-        @xml = @trix = @graph = nil
+        @xml = @trix = nil
+      end
+
+      ##
+      # Creates an XML graph element with the given `name`.
+      #
+      # @param  [RDF::Resource] name
+      # @yield  [element]
+      # @yieldparam [REXML::Element] element
+      # @return [REXML::Element]
+      def create_graph(name = nil, &block)
+        graph = @trix.add_element('graph')
+        case name
+          when nil then nil
+          when RDF::Node then graph.add_element('id').text = name.to_s # non-standard
+          else graph.add_element('uri').text = name.to_s
+        end
+        block.call(graph) if block_given?
+        graph
       end
 
       ##
@@ -62,7 +79,7 @@ module RDF::TriX
       # @param  [String, #to_s]          content
       # @param  [Hash{Symbol => Object}] attributes
       # @yield  [element]
-      # @yieldparam [Nokogiri::XML::Element] element
+      # @yieldparam [REXML::Element] element
       # @return [REXML::Element]
       def create_element(name, content = nil, attributes = {}, &block)
         element = ::REXML::Element.new(name.to_s, nil, @xml.context)

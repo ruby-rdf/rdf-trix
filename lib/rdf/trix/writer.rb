@@ -50,6 +50,12 @@ module RDF::TriX
     attr_reader :implementation
 
     ##
+    # Returns the current named graph context, if any.
+    #
+    # @return [RDF::Resource]
+    attr_reader :context
+
+    ##
     # Initializes the TriX writer instance.
     #
     # @param  [IO, File]               output
@@ -60,6 +66,9 @@ module RDF::TriX
     # @yield  [writer]
     # @yieldparam [Writer] writer
     def initialize(output = $stdout, options = {}, &block)
+      @context = nil
+      @nesting = 0
+
       @library = case options[:library]
         when nil
           # Use Nokogiri or LibXML when available, and REXML otherwise:
@@ -95,12 +104,49 @@ module RDF::TriX
     end
 
     ##
+    # Defines a named graph context.
+    #
+    # @param  [RDF::Resource] name
+    # @yield  [writer]
+    # @yieldparam [RDF::TriX::Writer] writer
+    # @return [void]
+    def graph(name = nil, &block)
+      @nesting += 1
+      @graph = create_graph(@context = name)
+      block.call(self) if block_given?
+      @nesting -= 1
+    end
+
+    ##
+    # Returns `true` if we are currently in a `writer.graph { ... }` block.
+    #
+    # @return [Boolean]
+    def nested?
+      @nesting > 0
+    end
+
+    protected :nested?
+
+    ##
     # Generates an XML comment.
     #
     # @param  [String, #to_s] text
     # @return [void]
     def write_comment(text)
+      @graph = create_graph unless @graph
       @graph << create_comment(text)
+    end
+
+    ##
+    # Generates the TriX representation of an RDF statement.
+    #
+    # @param  [RDF::Statement] statement
+    # @return [void]
+    def write_statement(statement)
+      unless nested? || statement.context.to_s == @context.to_s
+        @graph = create_graph(@context = statement.context)
+      end
+      write_triple(*statement.to_triple)
     end
 
     ##
@@ -111,6 +157,7 @@ module RDF::TriX
     # @param  [RDF::Value]    object
     # @return [void]
     def write_triple(subject, predicate, object)
+      @graph = create_graph unless @graph
       @graph << format_triple(subject, predicate, object)
     end
 
