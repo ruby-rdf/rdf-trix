@@ -33,6 +33,6 @@ GEMSPEC = Gem::Specification.new do |gem|
   gem.add_development_dependency 'nokogiri',    '>= 1.4.1'
   gem.add_development_dependency 'libxml-ruby', '>= 1.1.3'
   gem.add_development_dependency 'rexml',       '>= 3.1.7'
-  gem.add_runtime_dependency     'rdf',         '>= 0.1.0'
+  gem.add_runtime_dependency     'rdf',         '>= 0.1.1'
   gem.post_install_message       = nil
 end
