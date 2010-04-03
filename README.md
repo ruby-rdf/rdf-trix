@@ -18,7 +18,7 @@ Documentation
 Dependencies
 ------------
 
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.1.0)
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.1.4)
 * [REXML](http://ruby-doc.org/stdlib/libdoc/rexml/rdoc/) (>= 3.1.7),
   [LibXML-Ruby](http://rubygems.org/gems/libxml-ruby) (>= 1.1.3), or
   [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.4.1)
