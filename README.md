@@ -6,6 +6,7 @@ This is an [RDF.rb][] plugin that adds support for parsing/serializing
 Nokia.
 
 * <http://github.com/bendiken/rdf-trix>
+* <http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby>
 
 Documentation
 -------------
@@ -26,8 +27,8 @@ Dependencies
 Installation
 ------------
 
-The recommended installation method is via RubyGems. To install the latest
-official release, do:
+The recommended installation method is via [RubyGems](http://rubygems.org/).
+To install the latest official release of the `RDF::TriX` gem, do:
 
     % [sudo] gem install rdf-trix
 
