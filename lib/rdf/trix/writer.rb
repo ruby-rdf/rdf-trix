@@ -113,7 +113,13 @@ module RDF::TriX
     def graph(name = nil, &block)
       @nesting += 1
       @graph = create_graph(@context = name)
-      block.call(self) if block_given?
+      if block_given?
+        case block.arity
+          when 1 then block.call(self)
+          else instance_eval(&block)
+        end
+      end
+      @graph = nil
       @nesting -= 1
     end
 
@@ -132,9 +138,18 @@ module RDF::TriX
     #
     # @param  [String, #to_s] text
     # @return [void]
+    # @see    RDF::Writer#write_comment
     def write_comment(text)
-      @graph = create_graph unless @graph
-      @graph << create_comment(text)
+      (@graph || @trix) << create_comment(text)
+    end
+
+    ##
+    # @private
+    # @see    RDF::Writer#write_graph
+    # @since  0.2.0
+    def write_graph(graph)
+      @graph = create_graph(@context = graph.context)
+      graph.each_triple { |*triple| write_triple(*triple) }
     end
 
     ##
@@ -172,7 +187,7 @@ module RDF::TriX
     def format_triple(subject, predicate, object, options = {})
       create_element(:triple) do |triple|
         triple << format_value(subject, options)
-        triple << format_uri(predicate, options)
+        triple << format_value(predicate, options)
         triple << format_value(object, options)
       end
     end
@@ -184,9 +199,6 @@ module RDF::TriX
     # @param  [Hash{Symbol => Object}] options
     # @return [Element]
     def format_node(value, options = {})
-      # TODO: should we be relying on object identity instead of on the
-      # specified blank node identifier as we're doing now? That is,
-      # is `RDF::Node.new(1) != RDF::Node.new(1)` to be true or false?
       create_element(:id, value.id.to_s)
     end
 
@@ -207,15 +219,18 @@ module RDF::TriX
     # @param  [Hash{Symbol => Object}]      options
     # @return [Element]
     def format_literal(value, options = {})
-      value = RDF::Literal.new(value) unless value.is_a?(RDF::Literal)
+      value = RDF::Literal.new(value) unless value.is_a?(RDF::Literal) # FIXME: remove after RDF.rb 0.2.1
       case
-        when value.datatype? # FIXME: use `has_datatype?` in RDF.rb 0.1.0
+        when value.has_datatype?
           create_element(:typedLiteral, value.value.to_s, 'datatype' => value.datatype.to_s)
-        when value.language? # FIXME: use `has_language?` in RDF.rb 0.1.0
+        when value.has_language?
           create_element(:plainLiteral, value.value.to_s, 'xml:lang' => value.language.to_s)
         else
           create_element(:plainLiteral, value.value.to_s)
       end
     end
+
+    alias_method :insert_graph,     :write_graph     # FIXME: remove after RDF.rb 0.2.1
+    alias_method :insert_statement, :write_statement # FIXME: remove after RDF.rb 0.2.1
   end # class Writer
 end # module RDF::TriX
