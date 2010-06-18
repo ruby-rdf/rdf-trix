@@ -1,18 +1,5 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
-describe RDF::TriX::Format do
-  it "should be discoverable" do
-    formats = [
-      RDF::Format.for(:trix),
-      RDF::Format.for("etc/doap.xml"),
-      RDF::Format.for(:file_name      => "etc/doap.xml"),
-      RDF::Format.for(:file_extension => "xml"),
-      RDF::Format.for(:content_type   => "application/trix"),
-    ]
-    formats.each { |format| format.should == RDF::TriX::Format }
-  end
-end
-
 describe RDF::TriX::Reader do
   it "should be discoverable" do
     readers = [
@@ -35,18 +22,5 @@ describe RDF::TriX::Reader do
     it "should return the correct number of statements" do
       @reader.count.should == @ntriples.count
     end
-  end
-end
-
-describe RDF::TriX::Writer do
-  it "should be discoverable" do
-    writers = [
-      RDF::Writer.for(:trix),
-      RDF::Writer.for("etc/test.xml"),
-      RDF::Writer.for(:file_name      => "etc/test.xml"),
-      RDF::Writer.for(:file_extension => "xml"),
-      RDF::Writer.for(:content_type   => "application/trix"),
-    ]
-    writers.each { |writer| writer.should == RDF::TriX::Writer }
   end
 end
