@@ -97,6 +97,32 @@ module RDF::TriX
     end
 
     ##
+    # @private
+    # @see RDF::Reader#each_triple
+    def each_triple(&block)
+      unless block_given?
+        enum_for(:each_triple)
+      else
+        each_statement do |statement|
+          block.call(*statement.to_triple)
+        end
+      end
+    end
+
+    ##
+    # @private
+    # @see RDF::Reader#each_quad
+    def each_quad(&block)
+      unless block_given?
+        enum_for(:each_quad)
+      else
+        each_statement do |statement|
+          block.call(*statement.to_quad)
+        end
+      end
+    end
+
+    ##
     # Returns the RDF value of the given TriX element.
     #
     # @param  [String]                 name

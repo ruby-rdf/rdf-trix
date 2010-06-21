@@ -5,6 +5,8 @@ module RDF::TriX
     #
     # @see http://libxml.rubyforge.org/rdoc/
     module LibXML
+      OPTIONS = {'trix' => Format::XMLNS}.freeze
+
       ##
       # Returns the name of the underlying XML library.
       #
@@ -28,21 +30,29 @@ module RDF::TriX
       end
 
       ##
-      # Enumerates each triple in the TriX stream.
-      #
-      # @todo   Support named graphs.
-      # @yield  [subject, predicate, object]
-      # @yieldparam [RDF::Resource] subject
-      # @yieldparam [RDF::URI]      predicate
-      # @yieldparam [RDF::Value]    object
-      # @return [Enumerator]
-      def each_triple(&block)
-        options = {'trix' => Format::XMLNS}
-        @xml.find('//trix:graph', options).each do |graph|
-          graph.find('./trix:triple', options).each do |triple|
-            triple = triple.children.select { |node| node.element? }[0..2]
-            triple = triple.map { |element| parse_element(element.name, element.attributes, element.content) }
-            block.call(*triple)
+      # @private
+      # @see RDF::Reader#each_graph
+      def each_graph(&block)
+        unless block_given?
+          enum_for(:each_graph)
+        else
+          # TODO
+        end
+      end
+
+      ##
+      # @private
+      # @see RDF::Reader#each_statement
+      def each_statement(&block)
+        unless block_given?
+          enum_for(:each_statement)
+        else
+          @xml.find('//trix:graph', OPTIONS).each do |graph|
+            graph.find('./trix:triple', OPTIONS).each do |triple|
+              triple = triple.children.select { |node| node.element? }[0..2]
+              triple = triple.map { |element| parse_element(element.name, element.attributes, element.content) }
+              block.call(RDF::Statement.new(*triple))
+            end
           end
         end
       end

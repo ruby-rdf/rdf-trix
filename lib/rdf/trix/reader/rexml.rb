@@ -5,6 +5,8 @@ module RDF::TriX
     #
     # @see http://www.germane-software.com/software/rexml/
     module REXML
+      OPTIONS = {}.freeze
+
       ##
       # Returns the name of the underlying XML library.
       #
@@ -24,19 +26,28 @@ module RDF::TriX
       end
 
       ##
-      # Enumerates each triple in the TriX stream.
-      #
-      # @todo   Support named graphs.
-      # @yield  [subject, predicate, object]
-      # @yieldparam [RDF::Resource] subject
-      # @yieldparam [RDF::URI]      predicate
-      # @yieldparam [RDF::Value]    object
-      # @return [Enumerator]
-      def each_triple(&block)
-        @xml.elements.each('TriX/graph/triple') do |triple|
-          triple = triple.select { |node| node.kind_of?(::REXML::Element) }[0..2]
-          triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }
-          block.call(*triple)
+      # @private
+      # @see RDF::Reader#each_graph
+      def each_graph(&block)
+        unless block_given?
+          enum_for(:each_graph)
+        else
+          # TODO
+        end
+      end
+
+      ##
+      # @private
+      # @see RDF::Reader#each_statement
+      def each_statement(&block)
+        unless block_given?
+          enum_for(:each_statement)
+        else
+          @xml.elements.each('TriX/graph/triple') do |triple|
+            triple = triple.select { |node| node.kind_of?(::REXML::Element) }[0..2]
+            triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }
+            block.call(RDF::Statement.new(*triple))
+          end
         end
       end
     end # module REXML
