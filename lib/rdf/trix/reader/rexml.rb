@@ -32,7 +32,11 @@ module RDF::TriX
         unless block_given?
           enum_for(:each_graph)
         else
-          # TODO
+          @xml.elements.each('TriX/graph') do |graph_element|
+            graph = RDF::Graph.new(read_context(graph_element))
+            read_statements(graph_element) { |statement| graph << statement }
+            block.call(graph)
+          end
         end
       end
 
@@ -43,11 +47,30 @@ module RDF::TriX
         unless block_given?
           enum_for(:each_statement)
         else
-          @xml.elements.each('TriX/graph/triple') do |triple|
-            triple = triple.select { |node| node.kind_of?(::REXML::Element) }[0..2]
-            triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }
-            block.call(RDF::Statement.new(*triple))
+          @xml.elements.each('TriX/graph') do |graph_element|
+            read_statements(graph_element, &block)
           end
+        end
+      end
+
+    protected
+
+      ##
+      # @private
+      def read_context(graph_element)
+        name = graph_element.elements.select { |element| element.name.to_s == 'uri' }.first.text.strip rescue nil
+        name ? RDF::URI.intern(name) : nil
+      end
+
+      ##
+      # @private
+      def read_statements(graph_element, &block)
+        context = read_context(graph_element)
+        graph_element.elements.each('triple') do |triple_element|
+          triple = triple_element.elements.to_a[0..2]
+          triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }
+          triple << {:context => context} if context
+          block.call(RDF::Statement.new(*triple))
         end
       end
     end # module REXML
