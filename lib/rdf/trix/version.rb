@@ -1,12 +1,11 @@
 module RDF module TriX
   module VERSION
     MAJOR = 0
-    MINOR = 0
-    TINY  = 3
+    MINOR = 2
+    TINY  = 0
     EXTRA = nil
 
-    STRING = [MAJOR, MINOR, TINY].join('.')
-    STRING << "-#{EXTRA}" if EXTRA
+    STRING = [MAJOR, MINOR, TINY, EXTRA].compact.join('.')
 
     ##
     # @return [String]
