@@ -219,7 +219,6 @@ module RDF::TriX
     # @param  [Hash{Symbol => Object}]      options
     # @return [Element]
     def format_literal(value, options = {})
-      value = RDF::Literal.new(value) unless value.is_a?(RDF::Literal) # FIXME: remove after RDF.rb 0.2.1
       case
         when value.has_datatype?
           create_element(:typedLiteral, value.value.to_s, 'datatype' => value.datatype.to_s)
@@ -229,8 +228,5 @@ module RDF::TriX
           create_element(:plainLiteral, value.value.to_s)
       end
     end
-
-    alias_method :insert_graph,     :write_graph     # FIXME: remove after RDF.rb 0.2.1
-    alias_method :insert_statement, :write_statement # FIXME: remove after RDF.rb 0.2.1
   end # class Writer
 end # module RDF::TriX
