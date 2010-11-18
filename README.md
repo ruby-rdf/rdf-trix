@@ -19,7 +19,7 @@ Documentation
 Dependencies
 ------------
 
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.2.3)
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.0)
 * [REXML](http://ruby-doc.org/stdlib/libdoc/rexml/rdoc/) (>= 3.1.7),
   [LibXML-Ruby](http://rubygems.org/gems/libxml-ruby) (>= 1.1.4), or
   [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.4.2)
@@ -39,21 +39,31 @@ To get a local working copy of the development repository, do:
 
     % git clone git://github.com/bendiken/rdf-trix.git
 
-Alternatively, you can download the latest development version as a tarball
-as follows:
+Alternatively, download the latest development version as a tarball as
+follows:
 
     % wget http://github.com/bendiken/rdf-trix/tarball/master
+
+Mailing List
+------------
+
+* <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
 
 Author
 ------
 
-* [Arto Bendiken](mailto:arto.bendiken@gmail.com) - <http://ar.to/>
+* [Arto Bendiken](http://github.com/bendiken) - <http://ar.to/>
+
+Contributors
+------------
+
+Refer to the accompanying {file:CREDITS} file.
 
 License
 -------
 
-`RDF::TriX` is free and unencumbered public domain software. For more
-information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
+This is free and unencumbered public domain software. For more information,
+see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 
 [RDF.rb]:   http://rdf.rubyforge.org/
 [TriX]:     http://www.w3.org/2004/03/trix/
