@@ -77,6 +77,6 @@ module RDF::TriX
           block.call(RDF::Statement.new(*triple))
         end
       end
-    end # module LibXML
-  end # class Reader
-end # module RDF::TriX
+    end # LibXML
+  end # Reader
+end # RDF::TriX

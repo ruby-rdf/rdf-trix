@@ -228,5 +228,5 @@ module RDF::TriX
           create_element(:plainLiteral, value.value.to_s)
       end
     end
-  end # class Writer
-end # module RDF::TriX
+  end # Writer
+end # RDF::TriX

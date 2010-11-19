@@ -88,6 +88,6 @@ module RDF::TriX
         block.call(element) if block_given?
         element
       end
-    end # module REXML
-  end # class Writer
-end # module RDF::TriX
+    end # REXML
+  end # Writer
+end # RDF::TriX

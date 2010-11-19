@@ -147,5 +147,5 @@ module RDF::TriX
           # TODO: raise error
       end
     end
-  end # class Reader
-end # module RDF::TriX
+  end # Reader
+end # RDF::TriX

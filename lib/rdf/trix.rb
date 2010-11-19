@@ -1,4 +1,4 @@
-require 'rdf'
+require 'rdf' # @see http://rubygems.org/gems/rdf
 
 module RDF
   ##
@@ -32,5 +32,5 @@ module RDF
     autoload :Reader,  'rdf/trix/reader'
     autoload :Writer,  'rdf/trix/writer'
     autoload :VERSION, 'rdf/trix/version'
-  end # module TriX
-end # module RDF
+  end # TriX
+end # RDF
