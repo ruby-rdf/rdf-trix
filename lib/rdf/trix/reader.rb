@@ -135,7 +135,7 @@ module RDF::TriX
     ##
     # Returns the RDF value of the given TriX element.
     #
-    # @param  [String]                 name
+    # @param  [String] name
     # @param  [Hash{String => Object}] attributes
     # @param  [String] content
     # @return [RDF::Value]
@@ -144,17 +144,27 @@ module RDF::TriX
         when :id
           RDF::Node.new(content.strip)
         when :uri
-          RDF::URI.new(content.strip)
+          uri = RDF::URI.new(content.strip) # TODO: interned URIs
+          uri.validate!     if validate?
+          uri.canonicalize! if canonicalize?
+          uri
         when :typedLiteral
-          RDF::Literal.new(content, :datatype => attributes['datatype'])
+          literal = RDF::Literal.new(content, :datatype => attributes['datatype'])
+          literal.validate!     if validate?
+          literal.canonicalize! if canonicalize?
+          literal
         when :plainLiteral
-          if lang = attributes['xml:lang'] || attributes['lang']
-            RDF::Literal.new(content, :language => lang)
-          else
-            RDF::Literal.new(content)
+          literal = case
+            when lang = attributes['xml:lang'] || attributes['lang']
+              RDF::Literal.new(content, :language => lang)
+            else
+              RDF::Literal.new(content)
           end
+          literal.validate!     if validate?
+          literal.canonicalize! if canonicalize?
+          literal
         else
-          # TODO: raise error
+          raise RDF::ReaderError, "expected element name to be 'id', 'uri', 'typedLiteral', or 'plainLiteral', but got #{name.inspect}"
       end
     end
   end # Reader
