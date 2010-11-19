@@ -2,6 +2,9 @@ module RDF::TriX
   ##
   # TriX format specification.
   #
+  # @example Loading TriX format support
+  #   require 'rdf/trix'
+  #
   # @example Obtaining a TriX format class
   #   RDF::Format.for(:trix)         #=> RDF::TriX::Format
   #   RDF::Format.for("etc/doap.xml")

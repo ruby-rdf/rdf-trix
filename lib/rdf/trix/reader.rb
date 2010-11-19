@@ -12,6 +12,9 @@ module RDF::TriX
   # [LibXML]:   http://libxml.rubyforge.org/rdoc/
   # [Nokogiri]: http://nokogiri.org/
   #
+  # @example Loading TriX parsing support
+  #   require 'rdf/trix'
+  #
   # @example Obtaining a TriX reader class
   #   RDF::Reader.for(:trix)         #=> RDF::TriX::Reader
   #   RDF::Reader.for("etc/doap.xml")
@@ -56,11 +59,13 @@ module RDF::TriX
     ##
     # Initializes the TriX reader instance.
     #
-    # @param  [IO, File, String]       input
+    # @param  [IO, File, String] input
     # @param  [Hash{Symbol => Object}] options
-    # @option options [Symbol]         :library (:nokogiri, :libxml, or :rexml)
-    # @yield  [reader]
-    # @yieldparam [Reader] reader
+    #   any additional options (see `RDF::Reader#initialize`)
+    # @option options [Symbol] :library (:nokogiri, :libxml, or :rexml)
+    # @yield  [reader] `self`
+    # @yieldparam  [RDF::Reader] reader
+    # @yieldreturn [void] ignored
     def initialize(input = $stdin, options = {}, &block)
       super do
         @library = case options[:library]
@@ -92,7 +97,12 @@ module RDF::TriX
         self.extend(@implementation)
 
         initialize_xml(options)
-        block.call(self) if block_given?
+        if block_given?
+          case block.arity
+            when 0 then instance_eval(&block)
+            else block.call(self)
+          end
+        end
       end
     end
 

@@ -12,6 +12,9 @@ module RDF::TriX
   # [LibXML]:   http://libxml.rubyforge.org/rdoc/
   # [Nokogiri]: http://nokogiri.org/
   #
+  # @example Loading TriX serialization support
+  #   require 'rdf/trix'
+  #
   # @example Obtaining a TriX writer class
   #   RDF::Writer.for(:trix)         #=> RDF::TriX::Writer
   #   RDF::Writer.for("etc/test.xml")
@@ -58,13 +61,15 @@ module RDF::TriX
     ##
     # Initializes the TriX writer instance.
     #
-    # @param  [IO, File]               output
+    # @param  [IO, File] output
     # @param  [Hash{Symbol => Object}] options
+    #   any additional options (see `RDF::Writer#initialize`)
     # @option options [Symbol]         :library  (:nokogiri or :rexml)
     # @option options [String, #to_s]  :encoding ('utf-8')
     # @option options [Integer]        :indent   (2)
-    # @yield  [writer]
-    # @yieldparam [Writer] writer
+    # @yield  [writer] `self`
+    # @yieldparam  [RDF::Writer] writer
+    # @yieldreturn [void] ignored
     def initialize(output = $stdout, options = {}, &block)
       @context = nil
       @nesting = 0
