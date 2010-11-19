@@ -110,26 +110,24 @@ module RDF::TriX
     # @private
     # @see RDF::Reader#each_triple
     def each_triple(&block)
-      unless block_given?
-        enum_for(:each_triple)
-      else
+      if block_given?
         each_statement do |statement|
           block.call(*statement.to_triple)
         end
       end
+      enum_triple
     end
 
     ##
     # @private
     # @see RDF::Reader#each_quad
     def each_quad(&block)
-      unless block_given?
-        enum_for(:each_quad)
-      else
+      if block_given?
         each_statement do |statement|
           block.call(*statement.to_quad)
         end
       end
+      enum_quad
     end
 
     ##

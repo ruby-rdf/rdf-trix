@@ -29,28 +29,26 @@ module RDF::TriX
       # @private
       # @see RDF::Reader#each_graph
       def each_graph(&block)
-        unless block_given?
-          enum_for(:each_graph)
-        else
+        if block_given?
           @xml.elements.each('TriX/graph') do |graph_element|
             graph = RDF::Graph.new(read_context(graph_element))
             read_statements(graph_element) { |statement| graph << statement }
             block.call(graph)
           end
         end
+        enum_graph
       end
 
       ##
       # @private
       # @see RDF::Reader#each_statement
       def each_statement(&block)
-        unless block_given?
-          enum_for(:each_statement)
-        else
+        if block_given?
           @xml.elements.each('TriX/graph') do |graph_element|
             read_statements(graph_element, &block)
           end
         end
+        enum_statement
       end
 
     protected
