@@ -6,3 +6,6 @@
 *.lock
 pkg
 tmp
+Gemfile.lock
+/doc/
+/pkg/

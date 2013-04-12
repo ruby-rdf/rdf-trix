@@ -1,15 +1,27 @@
-require File.join(File.dirname(__FILE__), 'spec_helper')
+# coding: utf-8
+$:.unshift "."
+require 'spec_helper'
+require 'rdf/spec/reader'
 
 describe RDF::TriX::Reader do
-  it "should be discoverable" do
-    readers = [
-      RDF::Reader.for(:trix),
-      RDF::Reader.for("etc/doap.xml"),
-      RDF::Reader.for(:file_name      => "etc/doap.xml"),
-      RDF::Reader.for(:file_extension => "xml"),
-      RDF::Reader.for(:content_type   => "application/trix"),
-    ]
-    readers.each { |reader| reader.should == RDF::TriX::Reader }
+  before :each do
+    @reader = RDF::TriX::Reader.new(StringIO.new(""))
+  end
+
+  include RDF_Reader
+
+  describe ".for" do
+    formats = [
+      :trix,
+      'etc/doap.xml',
+      {:file_name      => 'etc/doap.xml'},
+      {:file_extension => 'xml'},
+      {:content_type   => 'application/trix'},
+    ].each do |arg|
+      it "discovers with #{arg.inspect}" do
+        RDF::Reader.for(arg).should == RDF::TriX::Reader
+      end
+    end
   end
 
   context "when parsing etc/doap.xml" do

@@ -1,14 +1,26 @@
-require File.join(File.dirname(__FILE__), 'spec_helper')
+$:.unshift "."
+require 'spec_helper'
+require 'rdf/spec/writer'
 
 describe RDF::TriX::Writer do
-  it "should be discoverable" do
-    writers = [
-      RDF::Writer.for(:trix),
-      RDF::Writer.for("etc/test.xml"),
-      RDF::Writer.for(:file_name      => "etc/test.xml"),
-      RDF::Writer.for(:file_extension => "xml"),
-      RDF::Writer.for(:content_type   => "application/trix"),
-    ]
-    writers.each { |writer| writer.should == RDF::TriX::Writer }
+  before(:each) do
+    @writer = RDF::TriX::Writer.new(StringIO.new)
   end
+  
+  include RDF_Writer
+
+  describe ".for" do
+    formats = [
+      :trix,
+      'etc/doap.xml',
+      {:file_name      => 'etc/doap.xml'},
+      {:file_extension => 'xml'},
+      {:content_type   => 'application/trix'},
+    ].each do |arg|
+      it "discovers with #{arg.inspect}" do
+        RDF::Writer.for(arg).should == RDF::TriX::Writer
+      end
+    end
+  end
+
 end

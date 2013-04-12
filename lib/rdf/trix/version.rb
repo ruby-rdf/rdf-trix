@@ -1,19 +1,18 @@
-module RDF; module TriX
-  module VERSION
-    FILE = File.expand_path('../../../../VERSION', __FILE__)
-    MAJOR, MINOR, TINY, EXTRA = File.read(FILE).chomp.split('.')
-    STRING = [MAJOR, MINOR, TINY, EXTRA].compact.join('.').freeze
+module RDF::TriX::VERSION
+  VERSION_FILE = File.join(File.expand_path(File.dirname(__FILE__)), "..", "..", "..", "VERSION")
+  MAJOR, MINOR, TINY, EXTRA = File.read(VERSION_FILE).chop.split(".")
 
-    ##
-    # @return [String]
-    def self.to_s() STRING end
+  STRING = [MAJOR, MINOR, TINY, EXTRA].compact.join('.')
 
-    ##
-    # @return [String]
-    def self.to_str() STRING end
+  ##
+  # @return [String]
+  def self.to_s()   STRING end
 
-    ##
-    # @return [Array(Integer, Integer, Integer)]
-    def self.to_a() [MAJOR, MINOR, TINY] end
-  end
-end; end
+  ##
+  # @return [String]
+  def self.to_str() STRING end
+
+  ##
+  # @return [Array(Integer, Integer, Integer)]
+  def self.to_a() STRING.split(".") end
+end
