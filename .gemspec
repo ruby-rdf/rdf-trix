@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.date               = File.mtime('VERSION').strftime('%Y-%m-%d')
 
   gem.name               = 'rdf-trix'
-  gem.homepage           = 'http://ruby-rdf.github.com/rdf-trix/'
+  gem.homepage           = 'http://ruby-rdf.github.com/rdf-trix'
   gem.license            = 'Public Domain' if gem.respond_to?(:license=)
   gem.summary            = 'TriX support for RDF.rb.'
   gem.description        = 'RDF.rb plugin for parsing/serializing TriX data.'
