@@ -8,7 +8,7 @@ Nokia.
 * <http://github.com/bendiken/rdf-trix>
 * <http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby>
 
-[![Gem Version](https://badge.fury.io/rb/rdf-trix.png)][gem]
+[![Gem Version](https://badge.fury.io/rb/rdf-trix.png)](http://badge.fury.io/rb/rdf-trix)
 [![Build Status](https://travis-ci.org/ruby-rdf/rdf-trix.png?branch=master)](http://travis-ci.org/ruby-rdf/rdf-trix)
 
 Documentation
