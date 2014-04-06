@@ -54,7 +54,7 @@
     <triple>
       <uri>http://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#description</uri>
-      <plainLiteral xml:lang="en">RDF.rb plugin for parsing/serializing TriX data.</plainLiteral>
+      <plainLiteral xml:lang="en">RDF.rb extension for parsing/serializing TriX data.</plainLiteral>
     </triple>
     <triple>
       <uri>http://rubygems.org/gems/rdf-trix</uri>

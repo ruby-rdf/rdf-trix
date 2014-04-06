@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.homepage           = 'http://ruby-rdf.github.com/rdf-trix'
   gem.license            = 'Public Domain' if gem.respond_to?(:license=)
   gem.summary            = 'TriX support for RDF.rb.'
-  gem.description        = 'RDF.rb plugin for parsing/serializing TriX data.'
+  gem.description        = 'RDF.rb extension for parsing/serializing TriX data.'
   gem.rubyforge_project  = 'rdf'
 
   gem.author             = 'Arto Bendiken'

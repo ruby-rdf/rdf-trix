@@ -2,7 +2,7 @@ require 'rdf' # @see http://rubygems.org/gems/rdf
 
 module RDF
   ##
-  # **`RDF::TriX`** is a TriX plugin for RDF.rb.
+  # **`RDF::TriX`** is a TriX extension for RDF.rb.
   #
   # @example Requiring the `RDF::TriX` module
   #   require 'rdf/trix'
