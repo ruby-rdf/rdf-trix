@@ -18,7 +18,7 @@ describe RDF::TriX::Writer do
       {:content_type   => 'application/trix'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
-        RDF::Writer.for(arg).should == RDF::TriX::Writer
+        expect(RDF::Writer.for(arg)).to eq RDF::TriX::Writer
       end
     end
   end

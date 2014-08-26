@@ -25,7 +25,7 @@ describe RDF::TriX::Reader do
       {:content_type   => 'application/trix'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
-        RDF::Reader.for(arg).should == RDF::TriX::Reader
+        expect(RDF::Reader.for(arg)).to eq RDF::TriX::Reader
       end
     end
   end
@@ -38,7 +38,7 @@ describe RDF::TriX::Reader do
     end
 
     it "should return the correct number of statements" do
-      @reader.count.should == @ntriples.count
+      expect(@reader.count).to eq @ntriples.count
     end
   end
 end

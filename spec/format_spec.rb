@@ -18,17 +18,17 @@ describe RDF::TriX::Format do
       {:content_type   => 'application/trix'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
-        RDF::Format.for(arg).should == @format_class
+        expect(RDF::Format.for(arg)).to eq @format_class
       end
     end
 
     it "should discover 'trix'" do
-      RDF::Format.for(:trix).reader.should == RDF::TriX::Reader
+      expect(RDF::Format.for(:trix).reader).to eq RDF::TriX::Reader
     end
   end
 
   describe "#to_sym" do
-    specify {@format_class.to_sym.should == :trix}
+    specify {expect(@format_class.to_sym).to eq :trix}
   end
 
 end
