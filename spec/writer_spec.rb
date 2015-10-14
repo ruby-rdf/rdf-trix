@@ -3,11 +3,9 @@ require 'spec_helper'
 require 'rdf/spec/writer'
 
 describe RDF::TriX::Writer do
-  before(:each) do
-    @writer = RDF::TriX::Writer.new(StringIO.new)
+  it_behaves_like 'an RDF::Writer' do
+    let(:writer) {RDF::TriX::Writer.new}
   end
-  
-  include RDF_Writer
 
   describe ".for" do
     formats = [
