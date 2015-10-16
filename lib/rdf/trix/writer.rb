@@ -191,9 +191,9 @@ module RDF::TriX
     # @return [Element]
     def format_triple(subject, predicate, object, options = {})
       create_element(:triple) do |triple|
-        triple << format_value(subject, options)
-        triple << format_value(predicate, options)
-        triple << format_value(object, options)
+        triple << format_term(subject, options)
+        triple << format_term(predicate, options)
+        triple << format_term(object, options)
       end
     end
 
