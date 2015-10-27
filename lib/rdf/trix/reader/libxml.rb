@@ -23,8 +23,8 @@ module RDF::TriX
       def initialize_xml(options = {})
         require 'libxml' unless defined?(::LibXML)
         @xml = case @input
-          when File   then ::LibXML::XML::Document.file(@input.path)
-          when IO     then ::LibXML::XML::Document.io(@input)
+          when File         then ::LibXML::XML::Document.file(@input.path)
+          when IO, StringIO then ::LibXML::XML::Document.io(@input)
           else ::LibXML::XML::Document.string(@input.to_s)
         end
       end
@@ -35,7 +35,7 @@ module RDF::TriX
       def each_graph(&block)
         if block_given?
           @xml.find('//trix:graph', OPTIONS).each do |graph_element|
-            graph = RDF::Graph.new(read_context(graph_element))
+            graph = RDF::Graph.new(read_graph(graph_element))
             read_statements(graph_element) { |statement| graph << statement }
             block.call(graph)
           end
@@ -59,7 +59,7 @@ module RDF::TriX
 
       ##
       # @private
-      def read_context(graph_element)
+      def read_graph(graph_element)
         name = graph_element.children.select { |node| node.element? && node.name.to_s == 'uri' }.first.content.strip rescue nil
         name ? RDF::URI.intern(name) : nil
       end
@@ -67,7 +67,7 @@ module RDF::TriX
       ##
       # @private
       def read_statements(graph_element, &block)
-        context = read_context(graph_element)
+        context = read_graph(graph_element)
         graph_element.find('./trix:triple', OPTIONS).each do |triple_element|
           triple = triple_element.children.select { |node| node.element? }[0..2]
           triple = triple.map { |element| parse_element(element.name, element.attributes, element.content) }

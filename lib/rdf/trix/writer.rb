@@ -53,10 +53,10 @@ module RDF::TriX
     attr_reader :implementation
 
     ##
-    # Returns the current named graph context, if any.
+    # Returns the current graph_name, if any.
     #
     # @return [RDF::Resource]
-    attr_reader :context
+    attr_reader :graph_name
 
     ##
     # Initializes the TriX writer instance.
@@ -71,7 +71,7 @@ module RDF::TriX
     # @yieldparam  [RDF::Writer] writer
     # @yieldreturn [void] ignored
     def initialize(output = $stdout, options = {}, &block)
-      @context = nil
+      @graph_name = nil
       @nesting = 0
 
       @library = case options[:library]
@@ -109,7 +109,7 @@ module RDF::TriX
     end
 
     ##
-    # Defines a named graph context.
+    # Defines a named graph.
     #
     # @param  [RDF::Resource] name
     # @yield  [writer]
@@ -117,7 +117,7 @@ module RDF::TriX
     # @return [void]
     def graph(name = nil, &block)
       @nesting += 1
-      @graph = create_graph(@context = name)
+      @graph = create_graph(@graph_name = name)
       if block_given?
         case block.arity
           when 1 then block.call(self)
@@ -149,22 +149,13 @@ module RDF::TriX
     end
 
     ##
-    # @private
-    # @see    RDF::Writer#write_graph
-    # @since  0.2.0
-    def write_graph(graph)
-      @graph = create_graph(@context = graph.context)
-      graph.each_triple { |*triple| write_triple(*triple) }
-    end
-
-    ##
     # Generates the TriX representation of an RDF statement.
     #
     # @param  [RDF::Statement] statement
     # @return [void]
     def write_statement(statement)
-      unless nested? || statement.context.to_s == @context.to_s
-        @graph = create_graph(@context = statement.context)
+      unless nested? || statement.graph_name.to_s == @graph_name.to_s
+        @graph = create_graph(@graph_name = statement.graph_name)
       end
       write_triple(*statement.to_triple)
     end
