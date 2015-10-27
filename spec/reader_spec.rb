@@ -29,6 +29,7 @@ describe RDF::TriX::Reader do
   end
 
   %w(nokogiri libxml rexml).each do |impl|
+    next if impl == 'libxml' && defined?(:RUBY_ENGINE) && RUBY_ENGINE == "jruby"
     context impl do
       context "when parsing etc/doap.xml", focus: true do
         let(:ntriples) {RDF::Graph.load(doap_nt)}

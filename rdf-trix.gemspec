@@ -32,7 +32,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec-its',   '~> 1.0'
   gem.add_development_dependency 'yard' ,       '~> 0.8'
   gem.add_development_dependency 'nokogiri',    '~> 1.6'
-  gem.add_development_dependency 'libxml-ruby', '~> 2.8'
+  gem.add_development_dependency 'libxml-ruby', '~> 2.8' unless defined?(:RUBY_ENGINE) && RUBY_ENGINE == "jruby"
 
   gem.post_install_message       = nil
 end
