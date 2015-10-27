@@ -28,15 +28,16 @@ describe RDF::TriX::Reader do
     end
   end
 
-  context "when parsing etc/doap.xml" do
-    before :each do
-      etc = File.expand_path(File.join(File.dirname(__FILE__), '..', 'etc'))
-      @ntriples = RDF::NTriples::Reader.new(File.open(File.join(etc, 'doap.nt')))
-      @reader = RDF::TriX::Reader.open(File.join(etc, 'doap.xml'))
-    end
+  %w(nokogiri libxml rexml).each do |impl|
+    context impl do
+      context "when parsing etc/doap.xml", focus: true do
+        let(:ntriples) {RDF::Graph.load(doap_nt)}
+        let(:trix) {RDF::Graph.load(doap, format: :trix, library: impl.to_sym)}
 
-    it "should return the correct number of statements" do
-      expect(@reader.count).to eq @ntriples.count
+        it "should return the correct number of statements" do
+          expect(trix.count).to eq ntriples.count
+        end
+      end
     end
   end
 end

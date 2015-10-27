@@ -21,4 +21,12 @@ describe RDF::TriX::Writer do
     end
   end
 
+  %w(nokogiri rexml).each do |impl|
+    context impl do
+      it "serializes doap" do
+        graph = RDF::Graph.load(File.expand_path("../../etc/doap.nt", __FILE__))
+        expect {graph.dump(:trix, library: impl.to_sym)}.not_to raise_error
+      end
+    end
+  end
 end
