@@ -1,7 +1,7 @@
 TriX Support for RDF.rb
 =======================
 
-This is an [RDF.rb][] plugin that adds support for parsing/serializing
+This is an [RDF.rb][] extension that adds support for parsing/serializing
 [TriX][], an XML-based RDF serialization format developed by HP Labs and
 Nokia.
 

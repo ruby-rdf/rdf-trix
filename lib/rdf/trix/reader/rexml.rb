@@ -31,7 +31,7 @@ module RDF::TriX
       def each_graph(&block)
         if block_given?
           @xml.elements.each('TriX/graph') do |graph_element|
-            graph = RDF::Graph.new(read_context(graph_element))
+            graph = RDF::Graph.new(read_graph(graph_element))
             read_statements(graph_element) { |statement| graph << statement }
             block.call(graph)
           end
@@ -55,7 +55,7 @@ module RDF::TriX
 
       ##
       # @private
-      def read_context(graph_element)
+      def read_graph(graph_element)
         name = graph_element.elements.select { |element| element.name.to_s == 'uri' }.first.text.strip rescue nil
         name ? RDF::URI.intern(name) : nil
       end
@@ -63,7 +63,7 @@ module RDF::TriX
       ##
       # @private
       def read_statements(graph_element, &block)
-        context = read_context(graph_element)
+        context = read_graph(graph_element)
         graph_element.elements.each('triple') do |triple_element|
           triple = triple_element.elements.to_a[0..2]
           triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }

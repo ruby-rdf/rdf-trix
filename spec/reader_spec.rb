@@ -4,11 +4,15 @@ require 'spec_helper'
 require 'rdf/spec/reader'
 
 describe RDF::TriX::Reader do
-  before :each do
-    @reader = RDF::TriX::Reader.new(StringIO.new(""))
-  end
+  let!(:doap) {File.expand_path("../../etc/doap.xml", __FILE__)}
+  let!(:doap_nt) {File.expand_path("../../etc/doap.nt", __FILE__)}
+  let!(:doap_count) {File.open(doap_nt).each_line.to_a.length}
 
-  include RDF_Reader
+  it_behaves_like 'an RDF::Reader' do
+    let(:reader) {RDF::TriX::Reader.new(reader_input)}
+    let(:reader_input) {File.read(doap)}
+    let(:reader_count) {doap_count}
+  end
 
   describe ".for" do
     formats = [
@@ -19,20 +23,22 @@ describe RDF::TriX::Reader do
       {:content_type   => 'application/trix'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
-        RDF::Reader.for(arg).should == RDF::TriX::Reader
+        expect(RDF::Reader.for(arg)).to eq RDF::TriX::Reader
       end
     end
   end
 
-  context "when parsing etc/doap.xml" do
-    before :each do
-      etc = File.expand_path(File.join(File.dirname(__FILE__), '..', 'etc'))
-      @ntriples = RDF::NTriples::Reader.new(File.open(File.join(etc, 'doap.nt')))
-      @reader = RDF::TriX::Reader.open(File.join(etc, 'doap.xml'))
-    end
+  %w(nokogiri libxml rexml).each do |impl|
+    next if impl == 'libxml' && defined?(:RUBY_ENGINE) && RUBY_ENGINE == "jruby"
+    context impl do
+      context "when parsing etc/doap.xml", focus: true do
+        let(:ntriples) {RDF::Graph.load(doap_nt)}
+        let(:trix) {RDF::Graph.load(doap, format: :trix, library: impl.to_sym)}
 
-    it "should return the correct number of statements" do
-      @reader.count.should == @ntriples.count
+        it "should return the correct number of statements" do
+          expect(trix.count).to eq ntriples.count
+        end
+      end
     end
   end
 end
