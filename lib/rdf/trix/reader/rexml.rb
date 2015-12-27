@@ -68,7 +68,7 @@ module RDF::TriX
           triple = triple_element.elements.to_a[0..2]
           triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }
           triple << {:context => context} if context
-          block.call(RDF::Statement.new(*triple))
+          block.call(RDF::Statement(*triple))
         end
       end
     end # REXML

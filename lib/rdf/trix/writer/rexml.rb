@@ -42,6 +42,7 @@ module RDF::TriX
         formatter.write(@xml, @output)
         puts # add a line break after the last line
         @xml = @trix = nil
+        super
       end
 
       ##

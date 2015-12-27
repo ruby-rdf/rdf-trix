@@ -4,12 +4,13 @@ require 'spec_helper'
 require 'rdf/spec/reader'
 
 describe RDF::TriX::Reader do
+  let(:logger) {RDF::Spec.logger}
   let!(:doap) {File.expand_path("../../etc/doap.xml", __FILE__)}
   let!(:doap_nt) {File.expand_path("../../etc/doap.nt", __FILE__)}
   let!(:doap_count) {File.open(doap_nt).each_line.to_a.length}
 
   it_behaves_like 'an RDF::Reader' do
-    let(:reader) {RDF::TriX::Reader.new(reader_input)}
+    let(:reader) {RDF::TriX::Reader.new(reader_input, logger: logger)}
     let(:reader_input) {File.read(doap)}
     let(:reader_count) {doap_count}
   end

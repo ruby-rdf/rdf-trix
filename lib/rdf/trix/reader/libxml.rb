@@ -72,7 +72,7 @@ module RDF::TriX
           triple = triple_element.children.select { |node| node.element? }[0..2]
           triple = triple.map { |element| parse_element(element.name, element.attributes, element.content) }
           triple << {:context => context} if context
-          block.call(RDF::Statement.new(*triple))
+          block.call(RDF::Statement(*triple))
         end
       end
     end # LibXML

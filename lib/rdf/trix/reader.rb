@@ -96,7 +96,12 @@ module RDF::TriX
         end
         self.extend(@implementation)
 
-        initialize_xml(options)
+        begin
+          initialize_xml(options)
+        rescue
+          log_error("Malformed document: #{$!.message}")
+        end
+
         if block_given?
           case block.arity
             when 0 then instance_eval(&block)
@@ -162,7 +167,7 @@ module RDF::TriX
           literal.canonicalize! if canonicalize?
           literal
         else
-          raise RDF::ReaderError, "expected element name to be 'id', 'uri', 'typedLiteral', or 'plainLiteral', but got #{name.inspect}"
+          log_error "expected element name to be 'id', 'uri', 'typedLiteral', or 'plainLiteral', but got #{name.inspect}"
       end
     end
   end # Reader

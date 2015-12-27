@@ -22,7 +22,7 @@ Documentation
 Dependencies
 ------------
 
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 1.1)
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 2.0)
   [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.6.0)
 
 Installation

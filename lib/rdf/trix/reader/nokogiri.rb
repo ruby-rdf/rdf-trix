@@ -23,6 +23,8 @@ module RDF::TriX
       def initialize_xml(options = {})
         require 'nokogiri' unless defined?(::Nokogiri)
         @xml = ::Nokogiri::XML(@input)
+        log_error("Errors: #{@xml.errors.join('\n')}") unless @xml.errors.empty?
+        @xml
       end
 
       ##
@@ -68,7 +70,7 @@ module RDF::TriX
           triple = triple_element.children.select { |node| node.element? }[0..2]
           triple = triple.map { |element| parse_element(element.name, element, element.content) }
           triple << {:context => context} if context
-          block.call(RDF::Statement.new(*triple))
+          block.call(RDF::Statement(*triple))
         end
       end
     end # Nokogiri

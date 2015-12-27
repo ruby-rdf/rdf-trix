@@ -170,6 +170,8 @@ module RDF::TriX
     def write_triple(subject, predicate, object)
       @graph = create_graph unless @graph
       @graph << format_triple(subject, predicate, object)
+    rescue ArgumentError => e
+      log_error(subject, predicate, object, e.message)
     end
 
     ##
