@@ -39,6 +39,7 @@ module RDF::TriX
       def write_epilogue
         puts @xml.to_xml
         @xml = @trix = nil
+        super
       end
 
       ##

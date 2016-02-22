@@ -2,14 +2,19 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'rdf',        git: "git://github.com/ruby-rdf/rdf.git", branch: "develop"
-gem 'rdf-spec',   git: "git://github.com/ruby-rdf/rdf-spec.git", branch: "develop"
+gem 'rdf',      github: "ruby-rdf/rdf",       branch: "develop"
+gem "nokogiri"
 
 group :development do
-  gem 'rdf-turtle',   git: "git://github.com/ruby-rdf/rdf-turtle.git", branch: "develop"
+  gem 'ebnf',               github: "gkellogg/ebnf",                branch: "develop"
+  gem 'json-ld',            github: "ruby-rdf/json-ld",             branch: "develop"
+  gem 'rdf-isomorphic',     github: "ruby-rdf/rdf-isomorphic",      branch: "develop"
+  gem 'rdf-spec',           github: "ruby-rdf/rdf-spec",            branch: "develop"
+  gem 'rdf-turtle',         github: "ruby-rdf/rdf-turtle",          branch: "develop"
+  gem 'sxp',                github: "gkellogg/sxp-ruby"
   gem "wirble"
   gem "syntax"
-  gem "byebug", platform: :mri_21
+  gem "byebug", platform: :mri
 end
 
 platforms :rbx do

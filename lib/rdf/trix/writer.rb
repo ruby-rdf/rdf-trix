@@ -149,15 +149,18 @@ module RDF::TriX
     end
 
     ##
-    # Generates the TriX representation of an RDF statement.
+    # Generates the TriX representation of a quad.
     #
-    # @param  [RDF::Statement] statement
+    # @param  [RDF::Resource] subject
+    # @param  [RDF::URI]      predicate
+    # @param  [RDF::Value]    object
+    # @param  [RDF::Resource] graph_name
     # @return [void]
-    def write_statement(statement)
-      unless nested? || statement.graph_name.to_s == @graph_name.to_s
-        @graph = create_graph(@graph_name = statement.graph_name)
+    def write_quad(subject, predicate, object, graph_name)
+      unless nested? || graph_name.to_s == @graph_name.to_s
+        @graph = create_graph(@graph_name = graph_name)
       end
-      write_triple(*statement.to_triple)
+      write_triple(subject, predicate, object)
     end
 
     ##
@@ -170,6 +173,8 @@ module RDF::TriX
     def write_triple(subject, predicate, object)
       @graph = create_graph unless @graph
       @graph << format_triple(subject, predicate, object)
+    rescue ArgumentError => e
+      log_error(subject, predicate, object, e.message)
     end
 
     ##
