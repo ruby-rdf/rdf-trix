@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
 
   gem.name               = 'rdf-trix'
   gem.homepage           = 'http://ruby-rdf.github.com/rdf-trix'
-  gem.license            = 'Public Domain' if gem.respond_to?(:license=)
+  gem.license            = 'Unlicense'
   gem.summary            = 'TriX support for RDF.rb.'
   gem.description        = 'RDF.rb extension for parsing/serializing TriX data.'
   gem.rubyforge_project  = 'rdf'
@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.email              = 'public-rdf-ruby@w3.org'
 
   gem.platform           = Gem::Platform::RUBY
-  gem.files              = %w(AUTHORS CREDITS README UNLICENSE VERSION etc/doap.xml) + Dir.glob('lib/**/*.rb')
+  gem.files              = %w(AUTHORS CREDITS README.md UNLICENSE VERSION etc/doap.xml) + Dir.glob('lib/**/*.rb')
   gem.bindir             = %q(bin)
   gem.executables        = %w()
   gem.default_executable = gem.executables.first
@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     'rdf',         '>= 2.0.0.beta', '< 3'
   gem.add_development_dependency 'rdf-spec',    '>= 2.0.0.beta', '< 3'
   gem.add_development_dependency 'rspec',       '~> 3.4'
-  gem.add_development_dependency 'rspec-its',   '~> 1.0'
+  gem.add_development_dependency 'rspec-its',   '~> 1.2'
   gem.add_development_dependency 'yard' ,       '~> 0.8'
   gem.add_development_dependency 'nokogiri',    '~> 1.6'
   gem.add_development_dependency 'libxml-ruby', '~> 2.8' unless defined?(:RUBY_ENGINE) && RUBY_ENGINE == "jruby"
