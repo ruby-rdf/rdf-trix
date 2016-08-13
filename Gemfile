@@ -12,7 +12,6 @@ group :development do
   gem 'rdf-spec',           github: "ruby-rdf/rdf-spec",       branch: "develop"
   gem 'rdf-turtle',         github: "ruby-rdf/rdf-turtle",     branch: "develop"
   gem 'sxp',                github: "dryruby/sxp.rb",          branch: "develop"
-  gem "wirble"
   gem "syntax"
   gem "byebug", platform: :mri
 end
