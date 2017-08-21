@@ -10,7 +10,6 @@ Gem::Specification.new do |gem|
   gem.license            = 'Unlicense'
   gem.summary            = 'TriX support for RDF.rb.'
   gem.description        = 'RDF.rb extension for parsing/serializing TriX data.'
-  gem.rubyforge_project  = 'rdf'
 
   gem.author             = 'Arto Bendiken'
   gem.email              = 'public-rdf-ruby@w3.org'

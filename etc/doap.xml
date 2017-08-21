@@ -44,7 +44,7 @@
     <triple>
       <uri>http://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#download-page</uri>
-      <uri>http://rubyforge.org/projects/rdf/</uri>
+      <uri>http://rubygems.org/gems/rdf-trix/</uri>
     </triple>
     <triple>
       <uri>http://rubygems.org/gems/rdf-trix</uri>

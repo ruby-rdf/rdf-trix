@@ -1,4 +1,4 @@
-require 'rdf' # @see http://rubygems.org/gems/rdf
+require 'rdf'
 
 module RDF
   ##
@@ -21,7 +21,7 @@ module RDF
   #     end
   #   end
   #
-  # @see http://rdf.rubyforge.org/
+  # @see http://rubygems.org/gems/rdf
   # @see http://www.w3.org/2004/03/trix/
   # @see http://www.hpl.hp.com/techreports/2004/HPL-2004-56.pdf
   # @see http://swdev.nokia.com/trix/trix.html
