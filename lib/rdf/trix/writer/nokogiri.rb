@@ -30,6 +30,7 @@ module RDF::TriX
       # @return [void]
       def write_prologue
         @xml << (@trix = create_element(:TriX, nil, :xmlns => Format::XMLNS))
+        super
       end
 
       ##

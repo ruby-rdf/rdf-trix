@@ -13,8 +13,8 @@
   doap:description   "RDF.rb extension for parsing/serializing TriX data."@en ;
   doap:created       "2010-02-02" ;
   doap:platform      "Ruby" ;
-  doap:download-page <http://rubyforge.org/projects/rdf/> ;
-  doap:bug-database  <http://github.com/bendiken/rdf-trix/issues> ;
+  doap:download-page <http://rubygems.org/gems/rdf-trix/> ;
+  doap:bug-database  <http://github.com/ruby-rdf/rdf-trix/issues> ;
   doap:blog          <http://ar.to/>, <http://blog.datagraph.org/> ;
   doap:developer     <http://ar.to/#self> ;
   doap:maintainer    <http://ar.to/#self> ;
