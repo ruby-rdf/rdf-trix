@@ -105,7 +105,15 @@ module RDF::TriX
 
       @encoding = (options[:encoding] || 'utf-8').to_s
       initialize_xml(options)
-      super
+
+      super do
+        if block_given?
+          case block.arity
+            when 0 then instance_eval(&block)
+            else block.call(self)
+          end
+        end
+      end
     end
 
     ##
