@@ -25,13 +25,13 @@ Gem::Specification.new do |gem|
   gem.has_rdoc           = false
 
   gem.required_ruby_version      = '>= 2.2.2'
-  gem.add_runtime_dependency     'rdf',         '~> 2.0'
-  gem.add_development_dependency 'rdf-spec',    '~> 2.0'
-  gem.add_development_dependency 'rspec',       '~> 3.4'
+  gem.add_runtime_dependency     'rdf',         '~> 2.2'
+  gem.add_development_dependency 'rdf-spec',    '~> 2.2'
+  gem.add_development_dependency 'rspec',       '~> 3.6'
   gem.add_development_dependency 'rspec-its',   '~> 1.2'
-  gem.add_development_dependency 'yard' ,       '~> 0.8'
-  gem.add_development_dependency 'nokogiri',    '~> 1.6'
-  gem.add_development_dependency 'libxml-ruby', '~> 2.8' unless defined?(:RUBY_ENGINE) && RUBY_ENGINE == "jruby"
+  gem.add_development_dependency 'yard' ,       '~> 0.9'
+  gem.add_development_dependency 'nokogiri',    '~> 1.8'
+  gem.add_development_dependency 'libxml-ruby', '~> 3.0' unless defined?(:RUBY_ENGINE) && RUBY_ENGINE == "jruby"
 
   gem.post_install_message       = nil
 end
