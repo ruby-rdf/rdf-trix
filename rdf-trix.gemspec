@@ -31,7 +31,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rdf-spec',    '>= 2.2', '< 4.0'
   gem.add_development_dependency 'rspec',       '~> 3.7'
   gem.add_development_dependency 'rspec-its',   '~> 1.2'
-  gem.add_development_dependency 'yard' ,       '~> 0.9'
+  gem.add_development_dependency 'yard' ,       '~> 0.9.12'
   gem.add_development_dependency 'nokogiri',    '~> 1.8'
   gem.add_development_dependency 'libxml-ruby', '~> 3.0' unless defined?(:RUBY_ENGINE) && RUBY_ENGINE == "jruby"
 
