@@ -20,7 +20,7 @@ module RDF::TriX
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(options = {})
+      def initialize_xml(**options)
         require 'nokogiri' unless defined?(::Nokogiri)
         @xml = ::Nokogiri::XML(@input)
         log_error("Errors: #{@xml.errors.join('\n')}") unless @xml.errors.empty?

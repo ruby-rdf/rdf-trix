@@ -20,7 +20,7 @@ module RDF::TriX
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(options = {})
+      def initialize_xml(**options)
         require 'rexml/document' unless defined?(::REXML)
         @xml = ::REXML::Document.new(@input, :compress_whitespace => %w{uri})
       end

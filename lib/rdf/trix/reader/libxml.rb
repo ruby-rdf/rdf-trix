@@ -20,7 +20,7 @@ module RDF::TriX
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(options = {})
+      def initialize_xml(**options)
         require 'libxml' unless defined?(::LibXML)
         @xml = case @input
           when File         then ::LibXML::XML::Document.file(@input.path)

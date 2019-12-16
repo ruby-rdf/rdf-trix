@@ -66,7 +66,7 @@ module RDF::TriX
     # @yield  [reader] `self`
     # @yieldparam  [RDF::Reader] reader
     # @yieldreturn [void] ignored
-    def initialize(input = $stdin, options = {}, &block)
+    def initialize(input = $stdin, **options, &block)
       super do
         @library = case options[:library]
           when nil
@@ -97,7 +97,7 @@ module RDF::TriX
         self.extend(@implementation)
 
         begin
-          initialize_xml(options)
+          initialize_xml(**options)
         rescue
           log_error("Malformed document: #{$!.message}")
         end

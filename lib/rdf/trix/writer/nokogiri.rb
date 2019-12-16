@@ -18,7 +18,7 @@ module RDF::TriX
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(options = {})
+      def initialize_xml(**options)
         require 'nokogiri' unless defined?(::Nokogiri)
         @xml = ::Nokogiri::XML::Document.new
         @xml.encoding = @encoding
