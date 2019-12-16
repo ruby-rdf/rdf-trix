@@ -18,7 +18,7 @@ module RDF::TriX
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(options = {})
+      def initialize_xml(**options)
         require 'rexml/document' unless defined?(::REXML)
         @xml = ::REXML::Document.new(nil, :attribute_quote => :quote)
         @xml << ::REXML::XMLDecl.new(::REXML::XMLDecl::DEFAULT_VERSION, @encoding)

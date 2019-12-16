@@ -70,7 +70,7 @@ module RDF::TriX
     # @yield  [writer] `self`
     # @yieldparam  [RDF::Writer] writer
     # @yieldreturn [void] ignored
-    def initialize(output = $stdout, options = {}, &block)
+    def initialize(output = $stdout, **options, &block)
       @graph_name = nil
       @nesting = 0
 
@@ -104,7 +104,7 @@ module RDF::TriX
       self.extend(@implementation)
 
       @encoding = (options[:encoding] || 'utf-8').to_s
-      initialize_xml(options)
+      initialize_xml(**options)
 
       super do
         if block_given?
@@ -193,11 +193,11 @@ module RDF::TriX
     # @param  [RDF::Value]             object
     # @param  [Hash{Symbol => Object}] options
     # @return [Element]
-    def format_triple(subject, predicate, object, options = {})
+    def format_triple(subject, predicate, object, **options)
       create_element(:triple) do |triple|
-        triple << format_term(subject, options)
-        triple << format_term(predicate, options)
-        triple << format_term(object, options)
+        triple << format_term(subject, **options)
+        triple << format_term(predicate, **options)
+        triple << format_term(object, **options)
       end
     end
 
@@ -207,7 +207,7 @@ module RDF::TriX
     # @param  [RDF::Node]              value
     # @param  [Hash{Symbol => Object}] options
     # @return [Element]
-    def format_node(value, options = {})
+    def format_node(value, **options)
       create_element(:id, value.id.to_s)
     end
 
@@ -217,7 +217,7 @@ module RDF::TriX
     # @param  [RDF::URI]               value
     # @param  [Hash{Symbol => Object}] options
     # @return [Element]
-    def format_uri(value, options = {})
+    def format_uri(value, **options)
       create_element(:uri, value.to_s)
     end
 
@@ -227,7 +227,7 @@ module RDF::TriX
     # @param  [RDF::Literal, String, #to_s] value
     # @param  [Hash{Symbol => Object}]      options
     # @return [Element]
-    def format_literal(value, options = {})
+    def format_literal(value, **options)
       case
         when value.has_datatype?
           create_element(:typedLiteral, value.value.to_s, 'datatype' => value.datatype.to_s)
