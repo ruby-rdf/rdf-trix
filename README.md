@@ -6,7 +6,6 @@ This is an [RDF.rb][] extension that adds support for parsing/serializing
 Nokia.
 
 * <http://github.com/ruby-rdf/rdf-trix>
-* <http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby>
 
 [![Gem Version](https://badge.fury.io/rb/rdf-trix.png)](http://badge.fury.io/rb/rdf-trix)
 [![Build Status](https://travis-ci.org/ruby-rdf/rdf-trix.png?branch=master)](http://travis-ci.org/ruby-rdf/rdf-trix)
@@ -53,7 +52,7 @@ Mailing List
 Author
 ------
 
-* [Arto Bendiken](http://github.com/bendiken) - <http://ar.to/>
+* [Arto Bendiken](http://github.com/artob) - <http://ar.to/>
 
 Contributors
 ------------

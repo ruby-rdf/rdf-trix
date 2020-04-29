@@ -38,7 +38,7 @@
     </triple>
     <triple>
       <uri>http://rubygems.org/gems/rdf-trix</uri>
-      <uri>http://usefulinc.com/ns/doap#platform</uri>
+      <uri>http://usefulinc.com/ns/doap#programming-language</uri>
       <plainLiteral>Ruby</plainLiteral>
     </triple>
     <triple>
@@ -49,17 +49,12 @@
     <triple>
       <uri>http://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#bug-database</uri>
-      <uri>http://github.com/bendiken/rdf-trix/issues</uri>
+      <uri>https://github.com/ruby-rdf/rdf-trix/issues</uri>
     </triple>
     <triple>
       <uri>http://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#blog</uri>
       <uri>http://ar.to/</uri>
-    </triple>
-    <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
-      <uri>http://usefulinc.com/ns/doap#blog</uri>
-      <uri>http://blog.datagraph.org/</uri>
     </triple>
     <triple>
       <uri>http://rubygems.org/gems/rdf-trix</uri>
@@ -105,11 +100,6 @@
       <uri>http://ar.to/#self</uri>
       <uri>http://xmlns.com/foaf/0.1/made</uri>
       <uri>http://rubygems.org/gems/rdf-trix</uri>
-    </triple>
-    <triple>
-      <uri>http://ar.to/#self</uri>
-      <uri>http://www.w3.org/2000/01/rdf-schema#isDefinedBy</uri>
-      <uri>http://datagraph.org/bendiken/foaf</uri>
     </triple>
   </graph>
 </TriX>
