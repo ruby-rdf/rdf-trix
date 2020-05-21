@@ -8,9 +8,9 @@ module RDF::TriX
   # can explicitly override the used implementation by passing in a
   # `:library` option to `Reader.new` or `Reader.open`.
   #
-  # [REXML]:    http://www.germane-software.com/software/rexml/
-  # [LibXML]:   http://libxml.rubyforge.org/rdoc/
-  # [Nokogiri]: http://nokogiri.org/
+  # [REXML]:    https://www.germane-software.com/software/rexml/
+  # [LibXML]:   https://rubygems.org/gems/libxml-ruby/
+  # [Nokogiri]: https://nokogiri.org/
   #
   # @example Loading TriX parsing support
   #   require 'rdf/trix'
@@ -46,7 +46,7 @@ module RDF::TriX
   #     end
   #   end
   #
-  # @see http://www.w3.org/2004/03/trix/
+  # @see https://www.w3.org/2004/03/trix/
   class Reader < RDF::Reader
     format RDF::TriX::Format
 

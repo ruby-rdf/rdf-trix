@@ -3,7 +3,7 @@ module RDF::TriX
     ##
     # LibXML-Ruby implementation of the TriX reader.
     #
-    # @see http://libxml.rubyforge.org/rdoc/
+    # @see https://rubygems.org/gems/libxml-ruby/
     module LibXML
       OPTIONS = {'trix' => Format::XMLNS}.freeze
 

@@ -3,7 +3,7 @@ module RDF::TriX
     ##
     # REXML implementation of the TriX writer.
     #
-    # @see http://www.germane-software.com/software/rexml/
+    # @see https://www.germane-software.com/software/rexml/
     module REXML
       ##
       # Returns the name of the underlying XML library.

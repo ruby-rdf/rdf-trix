@@ -3,7 +3,7 @@ module RDF::TriX
     ##
     # Nokogiri implementation of the TriX writer.
     #
-    # @see http://nokogiri.org/
+    # @see https://nokogiri.org/
     module Nokogiri
       ##
       # Returns the name of the underlying XML library.

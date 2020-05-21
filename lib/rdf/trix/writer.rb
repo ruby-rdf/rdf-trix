@@ -8,9 +8,9 @@ module RDF::TriX
   # override the used implementation by passing in a `:library` option to
   # `Writer.new` or `Writer.open`.
   #
-  # [REXML]:    http://www.germane-software.com/software/rexml/
-  # [LibXML]:   http://libxml.rubyforge.org/rdoc/
-  # [Nokogiri]: http://nokogiri.org/
+  # [REXML]:    https://www.germane-software.com/software/rexml/
+  # [LibXML]:   https://rubygems.org/gems/libxml-ruby/
+  # [Nokogiri]: https://nokogiri.org/
   #
   # @example Loading TriX serialization support
   #   require 'rdf/trix'
@@ -42,7 +42,7 @@ module RDF::TriX
   #     end
   #   end
   #
-  # @see http://www.w3.org/2004/03/trix/
+  # @see https://www.w3.org/2004/03/trix/
   class Writer < RDF::Writer
     format RDF::TriX::Format
 

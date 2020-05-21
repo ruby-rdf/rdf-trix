@@ -3,7 +3,7 @@ module RDF::TriX
     ##
     # REXML implementation of the TriX reader.
     #
-    # @see http://www.germane-software.com/software/rexml/
+    # @see https://www.germane-software.com/software/rexml/
     module REXML
       OPTIONS = {}.freeze
 

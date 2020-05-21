@@ -3,7 +3,7 @@ module RDF::TriX
     ##
     # Nokogiri implementation of the TriX reader.
     #
-    # @see http://nokogiri.org/
+    # @see https://nokogiri.org/
     module Nokogiri
       OPTIONS = {'trix' => Format::XMLNS}.freeze
 

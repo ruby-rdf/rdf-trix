@@ -5,10 +5,10 @@ This is an [RDF.rb][] extension that adds support for parsing/serializing
 [TriX][], an XML-based RDF serialization format developed by HP Labs and
 Nokia.
 
-* <http://github.com/ruby-rdf/rdf-trix>
+* <https://github.com/ruby-rdf/rdf-trix>
 
-[![Gem Version](https://badge.fury.io/rb/rdf-trix.png)](http://badge.fury.io/rb/rdf-trix)
-[![Build Status](https://travis-ci.org/ruby-rdf/rdf-trix.png?branch=master)](http://travis-ci.org/ruby-rdf/rdf-trix)
+[![Gem Version](https://badge.fury.io/rb/rdf-trix.png)](https://badge.fury.io/rb/rdf-trix)
+[![Build Status](https://travis-ci.org/ruby-rdf/rdf-trix.png?branch=master)](https://travis-ci.org/ruby-rdf/rdf-trix)
 
 Documentation
 -------------
@@ -21,13 +21,13 @@ Documentation
 Dependencies
 ------------
 
-* [RDF.rb](http://rubygems.org/gems/rdf) (~> 3.1)
-  [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.10.0)
+* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.1)
+  [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.10.0)
 
 Installation
 ------------
 
-The recommended installation method is via [RubyGems](http://rubygems.org/).
+The recommended installation method is via [RubyGems](https://rubygems.org/).
 To install the latest official release of the `RDF::TriX` gem, do:
 
     % [sudo] gem install rdf-trix
@@ -42,17 +42,17 @@ To get a local working copy of the development repository, do:
 Alternatively, download the latest development version as a tarball as
 follows:
 
-    % wget http://github.com/ruby-rdf/rdf-trix/tarball/master
+    % wget https://github.com/ruby-rdf/rdf-trix/tarball/master
 
 Mailing List
 ------------
 
-* <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
+* <https://lists.w3.org/Archives/Public/public-rdf-ruby/>
 
 Author
 ------
 
-* [Arto Bendiken](http://github.com/artob) - <http://ar.to/>
+* [Arto Bendiken](https://github.com/artob) - <https://ar.to/>
 
 Contributors
 ------------
@@ -81,7 +81,7 @@ This repository uses [Git Flow](https://github.com/nvie/gitflow) to mange develo
 ## License
 
 This is free and unencumbered public domain software. For more information,
-see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
+see <https://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 
-[RDF.rb]:   http://rdf.rubyforge.org/
-[TriX]:     http://www.w3.org/2004/03/trix/
+[RDF.rb]:   https://rubygems.org/gems/rdf/
+[TriX]:     https://www.w3.org/2004/03/trix/
