@@ -2,82 +2,82 @@
 <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
   <graph>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri>
       <uri>http://usefulinc.com/ns/doap#Project</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#name</uri>
       <plainLiteral>RDF::TriX</plainLiteral>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#homepage</uri>
-      <uri>http://rdf.rubyforge.org/trix/</uri>
+      <uri>https://rubygems.org/gems/rdf-trix/</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#license</uri>
-      <uri>http://creativecommons.org/licenses/publicdomain/</uri>
+      <uri>https://unlicense.org/</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#shortdesc</uri>
       <plainLiteral xml:lang="en">TriX support for RDF.rb.</plainLiteral>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#description</uri>
       <plainLiteral xml:lang="en">RDF.rb extension for parsing/serializing TriX data.</plainLiteral>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#created</uri>
       <plainLiteral>2010-02-02</plainLiteral>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#programming-language</uri>
       <plainLiteral>Ruby</plainLiteral>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#download-page</uri>
-      <uri>http://rubygems.org/gems/rdf-trix/</uri>
+      <uri>https://rubygems.org/gems/rdf-trix/</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#bug-database</uri>
       <uri>https://github.com/ruby-rdf/rdf-trix/issues</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#blog</uri>
       <uri>http://ar.to/</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#developer</uri>
       <uri>http://ar.to/#self</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#maintainer</uri>
       <uri>http://ar.to/#self</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#documenter</uri>
       <uri>http://ar.to/#self</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://xmlns.com/foaf/0.1/maker</uri>
       <uri>http://ar.to/#self</uri>
     </triple>
     <triple>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://purl.org/dc/terms/creator</uri>
       <uri>http://ar.to/#self</uri>
     </triple>
@@ -99,7 +99,7 @@
     <triple>
       <uri>http://ar.to/#self</uri>
       <uri>http://xmlns.com/foaf/0.1/made</uri>
-      <uri>http://rubygems.org/gems/rdf-trix</uri>
+      <uri>https://rubygems.org/gems/rdf-trix</uri>
     </triple>
   </graph>
 </TriX>

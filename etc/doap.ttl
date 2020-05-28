@@ -8,7 +8,7 @@
 <> a doap:Project ;
   doap:name          "RDF::TriX" ;
   doap:homepage      <https://github.com/ruby-rdf/rdf-trix/> ;
-  doap:license       <http://creativecommons.org/licenses/publicdomain/> ;
+  doap:license       <https://unlicense.org/> ;
   doap:shortdesc     "TriX support for RDF.rb."@en ;
   doap:description   "RDF.rb extension for parsing/serializing TriX data."@en ;
   doap:created       "2010-02-02" ;
