@@ -19,7 +19,7 @@
     <triple>
       <uri>https://rubygems.org/gems/rdf-trix</uri>
       <uri>http://usefulinc.com/ns/doap#license</uri>
-      <uri>https://unlicense.org/</uri>
+      <uri>https://unlicense.org/1.0/</uri>
     </triple>
     <triple>
       <uri>https://rubygems.org/gems/rdf-trix</uri>
