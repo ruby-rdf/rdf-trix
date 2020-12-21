@@ -15,3 +15,8 @@ group :development do
   gem "syntax"
   gem "byebug", platform: :mri
 end
+
+group :test do
+  gem 'simplecov',      platforms: :mri
+  gem 'coveralls',      '~> 0.8', platforms: :mri
+end

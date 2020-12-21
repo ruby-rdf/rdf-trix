@@ -5,10 +5,10 @@ This is an [RDF.rb][] extension that adds support for parsing/serializing
 [TriX][], an XML-based RDF serialization format developed by HP Labs and
 Nokia.
 
-* <https://github.com/ruby-rdf/rdf-trix>
-
 [![Gem Version](https://badge.fury.io/rb/rdf-trix.png)](https://badge.fury.io/rb/rdf-trix)
-[![Build Status](https://travis-ci.org/ruby-rdf/rdf-trix.png?branch=master)](https://travis-ci.org/ruby-rdf/rdf-trix)
+[![Build Status](https://github.com/ruby-rdf/rdf-trix/workflows/CI/badge.svg?branch=develop)](https://github.com/ruby-rdf/rdf-trix/actions?query=workflow%3ACI)
+[![Coverage Status](https://coveralls.io/repos/ruby-rdf/rdf-trix/badge.svg)](https://coveralls.io/github/ruby-rdf/rdf-trix)
+[![Gitter chat](https://badges.gitter.im/ruby-rdf/rdf.png)](https://gitter.im/ruby-rdf/rdf)
 
 Documentation
 -------------

@@ -10,3 +10,4 @@ Gemfile.lock
 /doc/
 /pkg/
 /.byebug_history
+coverage
