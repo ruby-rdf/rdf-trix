@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
+require "bundler/setup"
+require 'rdf/trix'
+require 'rdf/turtle'
+require 'rdf/ntriples'
 
 namespace :gem do
   desc "Build the rdf-trix-#{File.read('VERSION').chomp}.gem file"
@@ -12,14 +16,19 @@ namespace :gem do
   end
 end
 
-desc "Generate etc/doap.xml from etc/doap.ttl."
-task :doap do
-  $:.unshift(File.expand_path("../lib", __FILE__))
-  require "bundler/setup"
-  require 'rubygems'
-  require 'rdf/turtle'
-  require 'rdf/trix'
+desc "Generate etc/doap.nt from etc/doap.ttl."
+task :doap => %w(etc/doap.xml etc/doap.nt)
+
+file "etc/doap.xml" => "etc/doap.ttl" do
   RDF::TriX::Writer.open("etc/doap.xml") do |writer|
+    RDF::Turtle::Reader.open("etc/doap.ttl") do |reader|
+      reader.each_statement { |statement| writer << statement }
+    end
+  end
+end
+
+file "etc/doap.nt" => "etc/doap.ttl" do
+  RDF::NTriples::Writer.open("etc/doap.nt") do |writer|
     RDF::Turtle::Reader.open("etc/doap.ttl") do |reader|
       reader.each_statement { |statement| writer << statement }
     end

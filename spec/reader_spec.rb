@@ -2,6 +2,7 @@
 $:.unshift "."
 require 'spec_helper'
 require 'rdf/spec/reader'
+require 'rdf/ordered_repo'
 
 describe RDF::TriX::Reader do
   let(:logger) {RDF::Spec.logger}
@@ -16,7 +17,7 @@ describe RDF::TriX::Reader do
   end
 
   describe ".for" do
-    formats = [
+    [
       :trix,
       'etc/doap.xml',
       {:file_name      => 'etc/doap.xml'},
@@ -38,6 +39,10 @@ describe RDF::TriX::Reader do
 
         it "should return the correct number of statements" do
           expect(trix.count).to eq ntriples.count
+        end
+
+        it "should be isomorphic" do
+          expect(trix).to be_equivalent_graph(ntriples)
         end
       end
     end
