@@ -45,6 +45,230 @@ describe RDF::TriX::Reader do
           expect(trix).to be_equivalent_graph(ntriples)
         end
       end
+
+      context "examples" do
+        {
+          example1: {
+            input: %(
+              <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                <graph>
+                  <uri>http://example.org/graph1</uri>
+                  <triple>
+                    <uri>http://example.org/Bob</uri>
+                    <uri>http://example.org/wife</uri>
+                    <uri>http://example.org/Mary</uri>
+                  </triple>
+                  <triple>
+                    <uri>http://example.org/Bob</uri>
+                    <uri>http://example.org/name</uri>
+                    <plainLiteral>Bob</plainLiteral>
+                  </triple>
+                  <triple>
+                    <uri>http://example.org/Mary</uri>
+                    <uri>http://example.org/age</uri>
+                    <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#integer">32</typedLiteral>
+                  </triple>
+               </graph>
+            </TriX>),
+            expect: %(
+              <http://example.org/Bob> <http://example.org/wife> <http://example.org/Mary> <http://example.org/graph1> .
+              <http://example.org/Bob> <http://example.org/name> "Bob" <http://example.org/graph1> .
+              <http://example.org/Mary> <http://example.org/age> "32"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.org/graph1> .
+            )
+          },
+          example3: {
+            input: %q(
+              <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                <graph>
+                  <uri>http://example.org/graph3</uri>
+                  <triple>
+                    <uri>http://example.org/aBook</uri>
+                    <uri>http://purl.org/dc/elements/1.1/title</uri>
+                    <typedLiteral
+                      datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">
+                      <ex:title xmlns:ex="http://example.org/">
+                        A Good Book
+                      </ex:title>
+                    </typedLiteral>
+                  </triple>
+                  <triple>
+                    <uri>http://example.org/aBook</uri>
+                    <uri>http://www.w3.org/2000/01/rdf-schema#comment</uri>
+                    <plainLiteral xml:lang="en">This is a really good book!</plainLiteral>
+                  </triple>
+                  <triple>
+                    <uri>http://example.org/graph3</uri>
+                    <uri>http://example.org/source</uri>
+                    <uri>http://example.org/book-description.rdf</uri>
+                  </triple>
+                </graph>
+              </TriX>
+            ),
+            expect: %q(
+              <http://example.org/aBook> <http://purl.org/dc/elements/1.1/title> "\n                      <ex:title xmlns:ex=\"http://example.org/\">\n                        A Good Book\n                      </ex:title>\n                    "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://example.org/graph3> .
+              <http://example.org/aBook> <http://www.w3.org/2000/01/rdf-schema#comment> "This is a really good book!"@en <http://example.org/graph3> .
+              <http://example.org/graph3> <http://example.org/source> <http://example.org/book-description.rdf> <http://example.org/graph3> .
+            ),
+            except: :rexml
+          },
+          example4: {
+            input: %(
+              <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                <graph>
+                  <uri>http://example.org/graph4</uri>
+                  <triple>
+                    <uri>http://example.org/aBook</uri>
+                      <uri>http://purl.org/dc/elements/1.1/title</uri>
+                      <typedLiteral
+                        datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">
+                        <ex:title xmlns:ex="http://example.org/">
+                          A Good Book
+                        </ex:title>
+                      </typedLiteral>
+                    </triple>
+                    <triple>
+                      <uri>http://example.org/aBook</uri>
+                      <uri>http://www.w3.org/2000/01/rdf-schema#comment</uri>
+                      <plainLiteral xml:lang="en">This is a really good book!</plainLiteral>
+                    </triple>
+                </graph>
+                <graph>
+                  <uri>http://example.org/graph5</uri>
+                  <triple>
+                    <uri>http://example.org/graph4</uri>
+                    <uri>http://example.org/source</uri>
+                    <uri>http://example.org/book-description.rdf</uri>
+                  </triple>
+                </graph>
+              </TriX>
+            ),
+            expect: %q(
+              <http://example.org/aBook> <http://purl.org/dc/elements/1.1/title> "\n                        <ex:title xmlns:ex=\"http://example.org/\">\n                          A Good Book\n                        </ex:title>\n                      "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://example.org/graph4> .
+              <http://example.org/aBook> <http://www.w3.org/2000/01/rdf-schema#comment> "This is a really good book!"@en <http://example.org/graph4> .
+              <http://example.org/graph4> <http://example.org/source> <http://example.org/book-description.rdf> <http://example.org/graph5> .
+            ),
+            except: :rexml
+          },
+          example5: {
+            input: %q(
+              <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                <graph>
+                  <uri>http://example.org/graph6</uri>
+                  <triple>
+                    <uri>http://example.org/tests/language-tag-case</uri>
+                    <uri>http://example.org/entailmentRules</uri>
+                    <uri>http://www.w3.org/199902/22-rdf-syntax-ns#</uri>
+                  </triple>
+                  <triple>
+                    <uri>http://example.org/tests/langauge-tag-case</uri>
+                    <uri>http://example.org/premis</uri>
+                    <uri>http://example.org/tests/graph1</uri>
+                  </triple>
+                </graph>
+                <graph>
+                  <uri>http://example.org/tests/graph1</uri>
+                  <triple>
+                    <id>x</id>
+                    <uri>http://example.org/property</uri>
+                    <plainLiteral xml:lang="en">a</plainLiteral>
+                  </triple>
+                </graph>
+                <graph>
+                  <uri>http://example.org/tests/graph2</uri>
+                  <triple>
+                    <id>x</id>
+                    <uri>http://example.org/property</uri>
+                    <plainLiteral xml:lang="en-US">a</plainLiteral>
+                  </triple>
+                </graph>
+              </TriX>
+            ),
+            expect: %(
+              <http://example.org/tests/language-tag-case> <http://example.org/entailmentRules> <http://www.w3.org/199902/22-rdf-syntax-ns#> <http://example.org/graph6> .
+              <http://example.org/tests/langauge-tag-case> <http://example.org/premis> <http://example.org/tests/graph1> <http://example.org/graph6> .
+              _:x <http://example.org/property> "a"@en <http://example.org/tests/graph1> .
+              _:x <http://example.org/property> "a"@en-us <http://example.org/tests/graph2> .
+            )
+          },
+          #"qnames": {
+          #  input: %(
+          #    <?xml-stylesheet type="text/xml" href="http://www.w3.org/2004/03/trix/all.xsl"?>
+          #    <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/"
+          #          xmlns:eg="http://example.org/">
+          #      <graph>
+          #        <uri>http://example.org/graph2</uri>
+          #        <triple>
+          #          <qname>eg:Bob</qname>
+          #          <qname>eg:wife</qname>
+          #          <qname>eg:Mary</qname>
+          #        </triple>
+          #        <triple>
+          #          <qname>eg:Bob</qname>
+          #          <qname>eg:name</qname>
+          #          <plainLiteral>Bob</plainLiteral>
+          #        </triple>
+          #        <triple>
+          #          <qname>eg:Mary</qname>
+          #          <qname>eg:age</qname>
+          #          <integer>32</integer>
+          #        </triple>
+          #     </graph>
+          #  </TriX>
+          #  ),
+          #  expect: %(
+          #  )
+          #},
+          #"xml:base": {
+          #  input: %(
+          #    <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/"
+          #          xml:base="http://example.org/">
+          #      <graph>
+          #        <uri>graph1</uri>
+          #        <triple>
+          #          <uri>Bob</uri>
+          #          <uri>wife</uri>
+          #          <uri>Mary</uri>
+          #        </triple>
+          #        <triple>
+          #          <uri>Bob</uri>
+          #          <uri>name</uri>
+          #          <plainLiteral>Bob</plainLiteral>
+          #        </triple>
+          #        <triple>
+          #          <uri>Mary</uri>
+          #          <uri>age</uri>
+          #          <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#integer">32</typedLiteral>
+          #        </triple>
+          #     </graph>
+          #  </TriX>),
+          #  expect: %(
+          #    <http://example.org/Bob> <http://example.org/wife> <http://example.org/Mary> <http://example.org/graph1> .
+          #    <http://example.org/Bob> <http://example.org/name> "Bob" <http://example.org/graph1> .
+          #    <http://example.org/Mary> <http://example.org/age> "32"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.org/graph1> .
+          #  ),
+          #  except: :rexml
+          #},
+        }.each do |name, params|
+          it name do
+            res = RDF::OrderedRepo.new << RDF::NQuads::Reader.new(params[:expect])
+            expect(parse(params[:input], library: impl.to_sym, **params)).to be_equivalent_graph(res, logger: @logger)
+          end unless Array(params[:except]).include?(impl.to_sym)
+        end
+      end
     end
+  end
+
+  def parse(input, **options)
+    @logger = RDF::Spec.logger
+    options = {
+      logger: @logger,
+      validate: false,
+      canonicalize: false,
+    }.merge(options)
+    graph = options[:graph] || RDF::OrderedRepo.new
+    RDF::TriX::Reader.new(input, **options).each do |statement|
+      graph << statement
+    end
+    graph
   end
 end

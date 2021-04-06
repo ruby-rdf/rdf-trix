@@ -1,3 +1,5 @@
+require 'rdf/xsd'
+
 module RDF::TriX
   ##
   # TriX parser.
@@ -160,14 +162,16 @@ module RDF::TriX
     def parse_element(name, element, content)
       case name.to_sym
         when :id
-          RDF::Node.new(content.strip)
+          RDF::Node.intern(content.strip)
         when :uri
           uri = RDF::URI.new(content.strip) # TODO: interned URIs
           uri.validate!     if validate?
           uri.canonicalize! if canonicalize?
           uri
         when :typedLiteral
-          literal = RDF::Literal.new(content, :datatype => element['datatype'])
+          content = element.children.c14nxl(library: @library) if
+            element['datatype'] == RDF.XMLLiteral
+          literal = RDF::Literal.new(content, :datatype => RDF::URI(element['datatype']))
           literal.validate!     if validate?
           literal.canonicalize! if canonicalize?
           literal
