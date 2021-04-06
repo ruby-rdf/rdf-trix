@@ -136,13 +136,28 @@ module RDF::TriX
     end
 
     ##
+    # Yield each statement from a graph
+    #
+    # @param [Object] element
+    # @yield statement
+    # @yieldparam [RDF::Statement] statement
+    def read_statements(graph_element, &block)
+      graph_name = read_graph(graph_element)
+      triple_elements(graph_element).each do |triple_element|
+        triple = element_elements(triple_element)[0..2].
+          map { |element| parse_element(element.name, element, element_content(element)) }
+        block.call(RDF::Statement(*triple, graph_name: graph_name))
+      end
+    end
+
+    ##
     # Returns the RDF value of the given TriX element.
     #
     # @param  [String] name
-    # @param  [Hash{String => Object}] attributes
+    # @param  [Hash{String => Object}] element
     # @param  [String] content
     # @return [RDF::Value]
-    def parse_element(name, attributes, content)
+    def parse_element(name, element, content)
       case name.to_sym
         when :id
           RDF::Node.new(content.strip)
@@ -152,13 +167,13 @@ module RDF::TriX
           uri.canonicalize! if canonicalize?
           uri
         when :typedLiteral
-          literal = RDF::Literal.new(content, :datatype => attributes['datatype'])
+          literal = RDF::Literal.new(content, :datatype => element['datatype'])
           literal.validate!     if validate?
           literal.canonicalize! if canonicalize?
           literal
         when :plainLiteral
           literal = case
-            when lang = attributes['xml:lang'] || attributes['lang']
+            when lang = element['xml:lang'] || element['lang']
               RDF::Literal.new(content, :language => lang)
             else
               RDF::Literal.new(content)

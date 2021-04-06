@@ -62,14 +62,20 @@ module RDF::TriX
 
       ##
       # @private
-      def read_statements(graph_element, &block)
-        graph_name = read_graph(graph_element)
-        graph_element.elements.each('triple') do |triple_element|
-          triple = triple_element.elements.
-            to_a[0..2].
-            map { |element| parse_element(element.name, element.attributes, element.text) }
-          block.call(RDF::Statement(*triple, graph_name: graph_name))
-        end
+      def triple_elements(element)
+        element.get_elements('triple')
+      end
+
+      ##
+      # @private
+      def element_elements(element)
+        element.elements.to_a
+      end
+
+      ##
+      # @private
+      def element_content(element)
+        element.text
       end
     end # REXML
   end # Reader
