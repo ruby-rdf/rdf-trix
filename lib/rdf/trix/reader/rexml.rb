@@ -20,9 +20,9 @@ module RDF::TriX
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(**options)
+      def initialize_xml(input, **options)
         require 'rexml/document' unless defined?(::REXML)
-        @xml = ::REXML::Document.new(@input, :compress_whitespace => %w{uri})
+        @xml = ::REXML::Document.new(input, :compress_whitespace => %w{uri})
       end
 
       ##
@@ -31,7 +31,7 @@ module RDF::TriX
       def each_graph(&block)
         if block_given?
           @xml.elements.each('TriX/graph') do |graph_element|
-            graph = RDF::Graph.new(read_graph(graph_element))
+            graph = RDF::Graph.new(graph_name: read_graph(graph_element))
             read_statements(graph_element) { |statement| graph << statement }
             block.call(graph)
           end
@@ -63,12 +63,12 @@ module RDF::TriX
       ##
       # @private
       def read_statements(graph_element, &block)
-        context = read_graph(graph_element)
+        graph_name = read_graph(graph_element)
         graph_element.elements.each('triple') do |triple_element|
-          triple = triple_element.elements.to_a[0..2]
-          triple = triple.map { |element| parse_element(element.name, element.attributes, element.text) }
-          triple << {:context => context} if context
-          block.call(RDF::Statement(*triple))
+          triple = triple_element.elements.
+            to_a[0..2].
+            map { |element| parse_element(element.name, element.attributes, element.text) }
+          block.call(RDF::Statement(*triple, graph_name: graph_name))
         end
       end
     end # REXML

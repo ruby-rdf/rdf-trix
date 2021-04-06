@@ -97,7 +97,7 @@ module RDF::TriX
         self.extend(@implementation)
 
         begin
-          initialize_xml(**options)
+          initialize_xml(input, **options)
         rescue
           log_error("Malformed document: #{$!.message}")
         end
