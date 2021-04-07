@@ -229,12 +229,14 @@ module RDF::TriX
     # @return [Element]
     def format_literal(value, **options)
       case
-        when value.has_datatype?
-          create_element(:typedLiteral, value.value.to_s, 'datatype' => value.datatype.to_s)
-        when value.has_language?
-          create_element(:plainLiteral, value.value.to_s, 'xml:lang' => value.language.to_s)
-        else
-          create_element(:plainLiteral, value.value.to_s)
+      when value.datatype == RDF.XMLLiteral
+        create_element(:typedLiteral, nil, 'datatype' => value.datatype.to_s, fragment: value.value.to_s)
+      when value.has_datatype?
+        create_element(:typedLiteral, value.value.to_s, 'datatype' => value.datatype.to_s)
+      when value.has_language?
+        create_element(:plainLiteral, value.value.to_s, 'xml:lang' => value.language.to_s)
+      else
+        create_element(:plainLiteral, value.value.to_s)
       end
     end
   end # Writer

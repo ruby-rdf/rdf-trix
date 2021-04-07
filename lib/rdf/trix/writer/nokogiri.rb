@@ -85,8 +85,10 @@ module RDF::TriX
         if xmlns = attributes.delete(:xmlns)
           element.default_namespace = xmlns
         end
+        fragment = attributes.delete(:fragment)
         attributes.each { |k, v| element[k.to_s] = v }
         element.content = content.to_s unless content.nil?
+        element << fragment if fragment
         block.call(element) if block_given?
         element
       end
