@@ -39,6 +39,13 @@ module RDF::TriX
 
       ##
       # @private
+      def read_base
+        base = @xml.root.attributes.get_attribute_ns("http://www.w3.org/XML/1998/namespace", "base") if @xml && @xml.root
+        RDF::URI(base.value) if base
+      end
+
+      ##
+      # @private
       def read_graph(graph_element)
         name = graph_element.children.select { |node| node.element? && node.name.to_s == 'uri' }.first.content.strip rescue nil
         name ? RDF::URI.intern(name) : nil

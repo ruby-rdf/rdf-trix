@@ -218,36 +218,36 @@ describe RDF::TriX::Reader do
           #  expect: %(
           #  )
           #},
-          #"xml:base": {
-          #  input: %(
-          #    <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/"
-          #          xml:base="http://example.org/">
-          #      <graph>
-          #        <uri>graph1</uri>
-          #        <triple>
-          #          <uri>Bob</uri>
-          #          <uri>wife</uri>
-          #          <uri>Mary</uri>
-          #        </triple>
-          #        <triple>
-          #          <uri>Bob</uri>
-          #          <uri>name</uri>
-          #          <plainLiteral>Bob</plainLiteral>
-          #        </triple>
-          #        <triple>
-          #          <uri>Mary</uri>
-          #          <uri>age</uri>
-          #          <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#integer">32</typedLiteral>
-          #        </triple>
-          #     </graph>
-          #  </TriX>),
-          #  expect: %(
-          #    <http://example.org/Bob> <http://example.org/wife> <http://example.org/Mary> <http://example.org/graph1> .
-          #    <http://example.org/Bob> <http://example.org/name> "Bob" <http://example.org/graph1> .
-          #    <http://example.org/Mary> <http://example.org/age> "32"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.org/graph1> .
-          #  ),
-          #  except: :rexml
-          #},
+          "xml:base": {
+            input: %(
+              <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/"
+                    xml:base="http://example.org/">
+                <graph>
+                  <uri>graph1</uri>
+                  <triple>
+                    <uri>Bob</uri>
+                    <uri>wife</uri>
+                    <uri>Mary</uri>
+                  </triple>
+                  <triple>
+                    <uri>Bob</uri>
+                    <uri>name</uri>
+                    <plainLiteral>Bob</plainLiteral>
+                  </triple>
+                  <triple>
+                    <uri>Mary</uri>
+                    <uri>age</uri>
+                    <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#integer">32</typedLiteral>
+                  </triple>
+               </graph>
+            </TriX>),
+            expect: %(
+              <http://example.org/Bob> <http://example.org/wife> <http://example.org/Mary> <http://example.org/graph1> .
+              <http://example.org/Bob> <http://example.org/name> "Bob" <http://example.org/graph1> .
+              <http://example.org/Mary> <http://example.org/age> "32"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.org/graph1> .
+            ),
+            except: :rexml
+          },
         }.each do |name, params|
           it name do
             res = RDF::OrderedRepo.new << RDF::NQuads::Reader.new(params[:expect])

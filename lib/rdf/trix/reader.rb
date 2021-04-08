@@ -59,6 +59,12 @@ module RDF::TriX
     attr_reader :implementation
 
     ##
+    # Returns the Base URI as provided, or found from xml:base
+    #
+    # @return [RDF::URI]
+    attr_reader :base_uri
+
+    ##
     # Initializes the TriX reader instance.
     #
     # @param  [IO, File, String] input
@@ -120,8 +126,13 @@ module RDF::TriX
     # @see RDF::Reader#each_graph
     def each_graph(&block)
       if block_given?
+        base = read_base
+        @base_uri = base_uri ? base : base_uri.join(base)
         find_graphs do |graph_element|
-          graph = RDF::Graph.new(graph_name: read_graph(graph_element))
+          graph_name = read_graph(graph_element)
+          graph_name = base_uri.join(graph_name) if
+            base_uri && graph_name && graph_name.relative?
+          graph = RDF::Graph.new(graph_name: graph_name)
           read_statements(graph_element) { |statement| graph << statement }
           block.call(graph)
         end
@@ -134,6 +145,8 @@ module RDF::TriX
     # @see RDF::Reader#each_statement
     def each_statement(&block)
       if block_given?
+        base = read_base
+        @base_uri = base_uri ? base_uri.join(base) : base
         find_graphs do |graph_element|
           read_statements(graph_element, &block)
         end
@@ -173,6 +186,8 @@ module RDF::TriX
     # @yieldparam [RDF::Statement] statement
     def read_statements(graph_element, &block)
       graph_name = read_graph(graph_element)
+      graph_name = base_uri.join(graph_name) if
+        base_uri && graph_name && graph_name.relative?
       triple_elements(graph_element).each do |triple_element|
         triple = element_elements(triple_element)[0..2].
           map { |element| parse_element(element.name, element, element_content(element)) }
@@ -193,6 +208,7 @@ module RDF::TriX
           RDF::Node.intern(content.strip)
         when :uri
           uri = RDF::URI.new(content.strip) # TODO: interned URIs
+          uri = base_uri.join(uri) if base_uri && uri.relative?
           uri.validate!     if validate?
           uri.canonicalize! if canonicalize?
           uri
