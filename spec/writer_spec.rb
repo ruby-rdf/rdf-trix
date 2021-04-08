@@ -75,6 +75,111 @@ describe RDF::TriX::Writer do
           end
         end
       end
+
+
+      context "RDF-star" do
+        {
+          "subject-iii": {
+            input: RDF::Statement(
+              RDF::Statement(
+                RDF::URI('http://example/s1'),
+                RDF::URI('http://example/p1'),
+                RDF::URI('http://example/o1')),
+              RDF::URI('http://example/p'),
+              RDF::URI('http://example/o'))
+          },
+          "subject-iib": {
+            input: RDF::Statement(
+              RDF::Statement(
+                RDF::URI('http://example/s1'),
+                RDF::URI('http://example/p1'),
+                RDF::Node.new('o1')),
+              RDF::URI('http://example/p'),
+              RDF::URI('http://example/o')),
+          },
+          "subject-iil": {
+            input: RDF::Statement(
+              RDF::Statement(
+                RDF::URI('http://example/s1'),
+                RDF::URI('http://example/p1'),
+                RDF::Literal('o1')),
+              RDF::URI('http://example/p'),
+              RDF::URI('http://example/o')),
+          },
+          "subject-bii": {
+            input: RDF::Statement(
+              RDF::Statement(
+                RDF::Node('s1'),
+                RDF::URI('http://example/p1'),
+                RDF::URI('http://example/o1')),
+              RDF::URI('http://example/p'),
+              RDF::URI('http://example/o')),
+          },
+          "subject-bib": {
+            input: RDF::Statement(
+              RDF::Statement(
+                RDF::Node('s1'),
+                RDF::URI('http://example/p1'),
+                RDF::Node.new('o1')),
+              RDF::URI('http://example/p'), RDF::URI('http://example/o')),
+          },
+          "subject-bil": {
+            input: RDF::Statement(
+              RDF::Statement(
+                RDF::Node('s1'),
+                RDF::URI('http://example/p1'),
+                RDF::Literal('o1')),
+              RDF::URI('http://example/p'),
+              RDF::URI('http://example/o')),
+          },
+          "object-iii":  {
+            input: RDF::Statement(
+              RDF::URI('http://example/s'),
+              RDF::URI('http://example/p'),
+              RDF::Statement(
+                RDF::URI('http://example/s1'),
+                RDF::URI('http://example/p1'),
+                RDF::URI('http://example/o1'))),
+          },
+          "object-iib":  {
+            input: RDF::Statement(
+              RDF::URI('http://example/s'),
+              RDF::URI('http://example/p'),
+              RDF::Statement(
+                RDF::URI('http://example/s1'),
+                RDF::URI('http://example/p1'),
+                RDF::Node.new('o1'))),
+          },
+          "object-iil":  {
+            input: RDF::Statement(
+              RDF::URI('http://example/s'),
+              RDF::URI('http://example/p'),
+              RDF::Statement(
+                RDF::URI('http://example/s1'),
+                RDF::URI('http://example/p1'),
+                RDF::Literal('o1'))),
+          },
+          "recursive-subject": {
+            input: RDF::Statement(
+              RDF::Statement(
+                RDF::Statement(
+                  RDF::URI('http://example/s2'),
+                  RDF::URI('http://example/p2'),
+                  RDF::URI('http://example/o2')),
+                RDF::URI('http://example/p1'),
+                RDF::URI('http://example/o1')),
+              RDF::URI('http://example/p'),
+              RDF::URI('http://example/o')),
+          },
+        }.each do |name, params|
+          it name do
+            graph = RDF::OrderedRepo.new {|g| g << params[:input]}
+            trix = graph.dump(:trix)
+            graph2 = RDF::OrderedRepo.new << RDF::TriX::Reader.new(trix, rdfstar: true)
+            expect(graph2).to be_equivalent_graph(graph)
+          end
+        end
+      end
     end
   end
 end

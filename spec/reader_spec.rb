@@ -254,6 +254,223 @@ describe RDF::TriX::Reader do
             expect(parse(params[:input], library: impl.to_sym, **params)).to be_equivalent_graph(res, logger: @logger)
           end unless Array(params[:except]).include?(impl.to_sym)
         end
+
+        context "RDF-star" do
+          it "raises an error if rdfstar option not set" do
+            trix = %(
+              <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                <graph>
+                  <triple>
+                    <triple>
+                      <uri>http://example/s1</uri>
+                      <uri>http://example/p1</uri>
+                      <uri>http://example/o1</uri>
+                    </triple>
+                    <uri>http://example/p</uri>
+                    <uri>http://example/o</uri>
+                  </triple>
+                </graph>
+              </TriX>)
+
+            expect {parse(trix, validate: true, library: impl.to_sym)}.to raise_error(RDF::ReaderError)
+          end
+
+          {
+            'turtle-eval-01': {
+              input: %(
+                <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                  <graph>
+                    <triple>
+                      <triple>
+                        <uri>http://example/s</uri>
+                        <uri>http://example/p</uri>
+                        <uri>http://example/o</uri>
+                      </triple>
+                      <uri>http://example/q</uri>
+                      <uri>http://example/z</uri>
+                    </triple>
+                  </graph>
+                </TriX>),
+              expect: %(
+                << <http://example/s> <http://example/p> <http://example/o> >> <http://example/q> <http://example/z> .
+              )
+            },
+            'turtle-eval-02': {
+              input: %(
+                <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                  <graph>
+                    <triple>
+                      <uri>http://example/a</uri>
+                      <uri>http://example/q</uri>
+                      <triple>
+                        <uri>http://example/s</uri>
+                        <uri>http://example/p</uri>
+                        <uri>http://example/o</uri>
+                      </triple>
+                    </triple>
+                  </graph>
+                </TriX>),
+              expect: %(
+                <http://example/a> <http://example/q> << <http://example/s> <http://example/p> <http://example/o> >> .
+              )
+            },
+            'turtle-eval-bnode-1': {
+              input: %(
+                <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                  <graph>
+                    <triple>
+                      <id>b</id>
+                      <uri>http://example/p</uri>
+                      <uri>http://example/o</uri>
+                    </triple>
+                    <triple>
+                      <triple>
+                        <id>b</id>
+                        <uri>http://example/p</uri>
+                        <uri>http://example/o</uri>
+                      </triple>
+                      <uri>http://example/q</uri>
+                      <uri>http://example/z</uri>
+                    </triple>
+                  </graph>
+                </TriX>),
+              expect: %(
+                _:b9 <http://example/p> <http://example/o> .
+                << _:b9 <http://example/p> <http://example/o> >> <http://example/q> <http://example/z> .
+              )
+            },
+            'turtle-eval-bnode-2': {
+              input: %(
+                <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                  <graph>
+                    <triple>
+                      <id>a</id>
+                      <uri>http://example/p1</uri>
+                      <id>a</id>
+                    </triple>
+                    <triple>
+                      <triple>
+                        <id>a</id>
+                        <uri>http://example/p1</uri>
+                        <id>a</id>
+                      </triple>
+                      <uri>http://example/q</uri>
+                      <triple>
+                        <id>a</id>
+                        <uri>http://example/p2</uri>
+                        <uri>http://example/o</uri>
+                      </triple>
+                    </triple>
+                  </graph>
+                </TriX>),
+              expect: %(
+                _:label1 <http://example/p1> _:label1 .
+                << _:label1 <http://example/p1> _:label1 >> <http://example/q> << _:label1 <http://example/p2> <http://example/o> >> .
+              )
+            },
+            'trig-eval-01': {
+              input: %(
+                <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                  <graph>
+                    <uri>http://example/G</uri>
+                    <triple>
+                      <triple>
+                        <uri>http://example/s</uri>
+                        <uri>http://example/p</uri>
+                        <uri>http://example/o</uri>
+                      </triple>
+                      <uri>http://example/q</uri>
+                      <uri>http://example/z</uri>
+                    </triple>
+                  </graph>
+                </TriX>),
+              expect: %(
+                << <http://example/s> <http://example/p> <http://example/o> >> <http://example/q> <http://example/z> <http://example/G> <http://example/G> .
+              )
+            },
+            'trig-eval-02': {
+              input: %(
+                <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                  <graph>
+                    <uri>http://example/G</uri>
+                    <triple>
+                      <uri>http://example/a</uri>
+                      <uri>http://example/q</uri>
+                      <triple>
+                        <uri>http://example/s</uri>
+                        <uri>http://example/p</uri>
+                        <uri>http://example/o</uri>
+                      </triple>
+                    </triple>
+                  </graph>
+                </TriX>),
+              expect: %(
+                <http://example/a> <http://example/q> << <http://example/s> <http://example/p> <http://example/o> >> <http://example/G> .
+              )
+            },
+            'trig-eval-bnode-1': {
+              input: %(
+                <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                  <graph>
+                    <uri>http://example/G</uri>
+                    <triple>
+                      <id>b</id>
+                      <uri>http://example/p</uri>
+                      <uri>http://example/o</uri>
+                    </triple>
+                    <triple>
+                      <triple>
+                        <id>b</id>
+                        <uri>http://example/p</uri>
+                        <uri>http://example/o</uri>
+                      </triple>
+                      <uri>http://example/q</uri>
+                      <uri>http://example/z</uri>
+                    </triple>
+                  </graph>
+                </TriX>),
+              expect: %(
+                _:b9 <http://example/p> <http://example/o> <http://example/G> .
+                << _:b9 <http://example/p> <http://example/o> >> <http://example/q> <http://example/z> <http://example/G> .
+              )
+            },
+            'trig-eval-bnode-2': {
+              input: %(
+                <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+                  <graph>
+                    <uri>http://example/G</uri>
+                    <triple>
+                      <id>a</id>
+                      <uri>http://example/p1</uri>
+                      <id>a</id>
+                    </triple>
+                    <triple>
+                      <triple>
+                        <id>a</id>
+                        <uri>http://example/p1</uri>
+                        <id>a</id>
+                      </triple>
+                      <uri>http://example/q</uri>
+                      <triple>
+                        <id>a</id>
+                        <uri>http://example/p2</uri>
+                        <uri>http://example/o</uri>
+                      </triple>
+                    </triple>
+                  </graph>
+                </TriX>),
+              expect: %(
+                _:label1 <http://example/p1> _:label1 <http://example/G> .
+                << _:label1 <http://example/p1> _:label1 >> <http://example/q> << _:label1 <http://example/p2> <http://example/o> >> <http://example/G> .
+              )
+            },
+          }.each do |name, params|
+            it name do
+              res = RDF::OrderedRepo.new << RDF::NQuads::Reader.new(params[:expect], rdfstar: true)
+              expect(parse(params[:input], library: impl.to_sym, rdfstar: true, **params)).to be_equivalent_graph(res, logger: @logger)
+            end unless Array(params[:except]).include?(impl.to_sym)
+          end
+        end
       end
     end
   end

@@ -136,6 +136,10 @@ module RDF::TriX
           read_statements(graph_element) { |statement| graph << statement }
           block.call(graph)
         end
+
+        if validate? && log_statistics[:error]
+          raise RDF::ReaderError, "Errors found during processing"
+        end
       end
       enum_graph
     end
@@ -149,6 +153,10 @@ module RDF::TriX
         @base_uri = base_uri ? base_uri.join(base) : base
         find_graphs do |graph_element|
           read_statements(graph_element, &block)
+        end
+
+        if validate? && log_statistics[:error]
+          raise RDF::ReaderError, "Errors found during processing"
         end
       end
       enum_statement
@@ -189,10 +197,19 @@ module RDF::TriX
       graph_name = base_uri.join(graph_name) if
         base_uri && graph_name && graph_name.relative?
       triple_elements(graph_element).each do |triple_element|
-        triple = element_elements(triple_element)[0..2].
-          map { |element| parse_element(element.name, element, element_content(element)) }
-        block.call(RDF::Statement(*triple, graph_name: graph_name))
+        block.call(read_triple(triple_element, graph_name: graph_name))
       end
+    end
+
+    ##
+    # Read a <triple>
+    # @param  [Hash{String => Object}] element
+    # @return [RDF::Statement] statement
+    def read_triple(element, graph_name: nil)
+      terms = element_elements(element)[0..2].map do |element|
+        parse_element(element.name, element, element_content(element))
+      end
+      RDF::Statement(*terms, graph_name: graph_name)
     end
 
     ##
@@ -212,6 +229,9 @@ module RDF::TriX
           uri.validate!     if validate?
           uri.canonicalize! if canonicalize?
           uri
+        when :triple # RDF-star
+          log_error "expected 'triple' element" unless @options[:rdfstar]
+          read_triple(element)
         when :typedLiteral
           content = element.children.c14nxl(library: @library) if
             element['datatype'] == RDF.XMLLiteral
@@ -230,7 +250,7 @@ module RDF::TriX
           literal.canonicalize! if canonicalize?
           literal
         else
-          log_error "expected element name to be 'id', 'uri', 'typedLiteral', or 'plainLiteral', but got #{name.inspect}"
+          log_error "expected element name to be 'id', 'uri', 'triple', 'typedLiteral', or 'plainLiteral', but got #{name.inspect}"
       end
     end
   end # Reader

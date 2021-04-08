@@ -1,13 +1,59 @@
 # TriX Support for RDF.rb
 
-This is an [RDF.rb][] extension that adds support for parsing/serializing
-[TriX][], an XML-based RDF serialization format developed by HP Labs and
-Nokia.
+[TriX][] reader/writer for [RDF.rb][RDF.rb] .
 
 [![Gem Version](https://badge.fury.io/rb/rdf-trix.png)](https://badge.fury.io/rb/rdf-trix)
 [![Build Status](https://github.com/ruby-rdf/rdf-trix/workflows/CI/badge.svg?branch=develop)](https://github.com/ruby-rdf/rdf-trix/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/ruby-rdf/rdf-trix/badge.svg?branch=develop)](https://coveralls.io/github/ruby-rdf/rdf-trix?branch=develop)
 [![Gitter chat](https://badges.gitter.im/ruby-rdf/rdf.png)](https://gitter.im/ruby-rdf/rdf)
+
+## Description
+This is a [Ruby][] implementation of a [TriX][] reader and writer for [RDF.rb][]. TriX is an XML-based RDF serialization format developed by HP Labs and Nokia.
+
+## Features
+RDF::TriX parses [TriX][] into statements or quads. It also serializes to TriX.
+
+Install with `gem install rdf-trix`
+
+* 100% free and unencumbered [public domain](https://unlicense.org/) software.
+* Implements a complete parser and serializer for [TriX][].
+* Compatible with Ruby >= 2.4, and JRuby 1.7+.
+
+### Support for xml:base
+
+The TriX reader natively supports `xml:base` in the top-level element without the need for an XSLT. This allows values of a `uri` element to be relative URIs and resolved against that base. The base can also be specified as an option to the reader.
+
+### RDF-star
+
+Both reader and writer include provisional support for [RDF-star][].
+
+Internally, an `RDF::Statement` is treated as another resource, along with `RDF::URI` and `RDF::Node`, which allows an `RDF::Statement` to have a `#subject` or `#object` which is also an `RDF::Statement`.
+
+RDF-star is supported by allowing a `triple` element to contain another `triple` as either or both the _subject_ or _object_.
+
+Note that this requires the `rdfstar` option to be se.
+
+**Note: This feature is subject to change or elimination as the standards process progresses.**
+
+## Usage
+Instantiate a reader from a local file:
+
+    repo = RDF::Repository.load("etc/doap.trix", :format => :trix)
+
+Define `@base` and `@prefix` definitions, and use for serialization using `:base_uri` an `:prefixes` options.
+
+Canonicalize and validate using `:canonicalize` and `:validate` options.
+
+Write a repository to a file:
+
+    RDF::TriX::Writer.open("etc/test.trix") do |writer|
+       writer << repo
+    end
+
+## Dependencies
+* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.1)
+* Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.10)
+* Soft dependency on [Nokogiri](https://rubygems.org/gems/libxml) (>= 3.0)
 
 ## Documentation
 
@@ -19,7 +65,8 @@ Nokia.
 ## Dependencies
 
 * [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.1)
-  [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.10.0)
+  [Nokogiri](https://rubygems.org/gems/nokogiri) (~> 1.10)
+  [LibXML](https://rubygems.org/gems/libxml) (>= 3.0)
 
 ## Installation
 
@@ -43,9 +90,10 @@ follows:
 
 * <https://lists.w3.org/Archives/Public/public-rdf-ruby/>
 
-## Author
+## Authors
 
 * [Arto Bendiken](https://github.com/artob) - <https://ar.to/>
+* [Gregg Kellogg](https://github.com/gkellogg) - <https://greggkellogg.net/>
 
 # Contributors
 
@@ -80,3 +128,4 @@ see <https://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 [RDF.rb]:   https://rubygems.org/gems/rdf/
 [TriX]:     https://www.hpl.hp.com/techreports/2004/HPL-2004-56.html
 [PDD]:              https://unlicense.org/#unlicensing-contributions
+[RDF-star]:         https://w3c.github.io/rdf-star/rdf-star-cg-spec.html

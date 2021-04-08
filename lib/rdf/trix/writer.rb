@@ -186,6 +186,31 @@ module RDF::TriX
     end
 
     ##
+    # Returns the TriX representation of a statement.
+    #
+    # @param  [RDF::Statement] statement
+    # @param  [Hash{Symbol => Object}] options ({})
+    # @return [String]
+    def format_statement(statement, **options)
+      format_triple(*statement.to_triple, **options)
+    end
+
+    ##
+    # Formats a referenced triple.
+    #
+    # @example
+    #     <<<s> <p> <o>>> <p> <o> .
+    #
+    # @param  [RDF::Statement] statment
+    # @param  [Hash{Symbol => Object}] options = ({})
+    # @return [String]
+    # @raise  [NotImplementedError] unless implemented in subclass
+    # @abstract
+    def format_embTriple(statement, **options)
+      format_statement(statement, **options)
+    end
+
+    ##
     # Returns the TriX representation of a triple.
     #
     # @param  [RDF::Resource]          subject
