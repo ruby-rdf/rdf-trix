@@ -25,33 +25,13 @@ module RDF::TriX
         @xml = ::REXML::Document.new(input, :compress_whitespace => %w{uri})
       end
 
-      ##
-      # @private
-      # @see RDF::Reader#each_graph
-      def each_graph(&block)
-        if block_given?
-          @xml.elements.each('TriX/graph') do |graph_element|
-            graph = RDF::Graph.new(graph_name: read_graph(graph_element))
-            read_statements(graph_element) { |statement| graph << statement }
-            block.call(graph)
-          end
-        end
-        enum_graph
-      end
-
-      ##
-      # @private
-      # @see RDF::Reader#each_statement
-      def each_statement(&block)
-        if block_given?
-          @xml.elements.each('TriX/graph') do |graph_element|
-            read_statements(graph_element, &block)
-          end
-        end
-        enum_statement
-      end
-
     protected
+
+      ##
+      # @private
+      def find_graphs(&block)
+        @xml.elements.each('TriX/graph', &block)
+      end
 
       ##
       # @private
