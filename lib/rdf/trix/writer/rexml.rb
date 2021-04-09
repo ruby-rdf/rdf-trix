@@ -29,7 +29,9 @@ module RDF::TriX
       #
       # @return [void]
       def write_prologue
-        @trix = @xml.add_element('TriX', 'xmlns' => Format::XMLNS)
+        options = {"xmlns" => Format::XMLNS, "xml" => "http://www.w3.org/XML/1998/namespace"}
+        options["xml:base"] = base_uri.to_s if base_uri
+        @trix = @xml.add_element('TriX', options)
         super
       end
 

@@ -76,6 +76,26 @@ describe RDF::TriX::Writer do
         end
       end
 
+      context "with base" do
+        subject do
+          nt = %(
+            <http://release/a> <http://foo/ref> <http://release/b> .
+          )
+          graph = RDF::OrderedRepo.new << RDF::NQuads::Reader.new(nt)
+          graph.dump(:trix, base_uri: "http://release/")
+        end
+
+        {
+          "/trix:TriX/@xml:base" => "http://release/",
+          "/trix:TriX/trix:graph/trix:triple/trix:uri[1]/text()" => "a",
+          "/trix:TriX/trix:graph/trix:triple/trix:uri[2]/text()" => "http://foo/ref",
+          "/trix:TriX/trix:graph/trix:triple/trix:uri[3]/text()" => "b",
+        }.each do |path, value|
+          it "returns #{value.inspect} for xpath #{path}" do
+            expect(subject).to have_xpath(path, value, {})
+          end
+        end
+      end
 
       context "RDF-star" do
         {

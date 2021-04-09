@@ -243,7 +243,7 @@ module RDF::TriX
     # @param  [Hash{Symbol => Object}] options
     # @return [Element]
     def format_uri(value, **options)
-      create_element(:uri, value.to_s)
+      create_element(:uri, value.relativize(base_uri).to_s)
     end
 
     ##
