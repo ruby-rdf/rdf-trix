@@ -23,6 +23,30 @@ Install with `gem install rdf-trix`
 
 The TriX reader natively supports `xml:base` in the top-level element without the need for an XSLT. This allows values of a `uri` element to be relative URIs and resolved against that base. The base can also be specified as an option to the reader.
 
+For example:
+
+    <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/"
+          xml:base="http://example.org/">
+      <graph>
+        <uri>graph1</uri>
+        <triple>
+          <uri>Bob</uri>
+          <uri>wife</uri>
+          <uri>Mary</uri>
+        </triple>
+        <triple>
+          <uri>Bob</uri>
+          <uri>name</uri>
+          <plainLiteral>Bob</plainLiteral>
+        </triple>
+        <triple>
+          <uri>Mary</uri>
+          <uri>age</uri>
+          <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#integer">32</typedLiteral>
+        </triple>
+     </graph>
+    </TriX>
+
 ### RDF-star
 
 Both reader and writer include provisional support for [RDF-star][].
@@ -34,6 +58,22 @@ RDF-star is supported by allowing a `triple` element to contain another `triple`
 Note that this requires the `rdfstar` option to be se.
 
 **Note: This feature is subject to change or elimination as the standards process progresses.**
+
+For example:
+
+    <TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+      <graph>
+        <triple>
+          <triple>
+            <uri>http://example/s1</uri>
+            <uri>http://example/p1</uri>
+            <uri>http://example/o1</uri>
+          </triple>
+          <uri>http://example/p</uri>
+          <uri>http://example/o</uri>
+        </triple>
+      </graph>
+    </TriX>
 
 ## Usage
 Instantiate a reader from a local file:
@@ -53,7 +93,7 @@ Write a repository to a file:
 ## Dependencies
 * [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.1)
 * Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.10)
-* Soft dependency on [Nokogiri](https://rubygems.org/gems/libxml) (>= 3.0)
+* Soft dependency on [Libxml-Ruby](https://rubygems.org/gems/libxml-ruby) (>= 3.0)
 
 ## Documentation
 
