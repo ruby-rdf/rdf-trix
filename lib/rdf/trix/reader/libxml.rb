@@ -3,7 +3,7 @@ module RDF::TriX
     ##
     # LibXML-Ruby implementation of the TriX reader.
     #
-    # @see http://libxml.rubyforge.org/rdoc/
+    # @see https://rubygems.org/gems/libxml-ruby/
     module LibXML
       OPTIONS = {'trix' => Format::XMLNS}.freeze
 
@@ -20,42 +20,29 @@ module RDF::TriX
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(**options)
+      def initialize_xml(input, **options)
         require 'libxml' unless defined?(::LibXML)
-        @xml = case @input
-          when File         then ::LibXML::XML::Document.file(@input.path)
-          when IO, StringIO then ::LibXML::XML::Document.io(@input)
-          else ::LibXML::XML::Document.string(@input.to_s)
+        @xml = case input
+          when File         then ::LibXML::XML::Document.file(input.path)
+          when IO, StringIO then ::LibXML::XML::Document.io(input)
+          else ::LibXML::XML::Document.string(input.to_s)
         end
-      end
-
-      ##
-      # @private
-      # @see RDF::Reader#each_graph
-      def each_graph(&block)
-        if block_given?
-          @xml.find('//trix:graph', OPTIONS).each do |graph_element|
-            graph = RDF::Graph.new(read_graph(graph_element))
-            read_statements(graph_element) { |statement| graph << statement }
-            block.call(graph)
-          end
-        end
-        enum_graph
-      end
-
-      ##
-      # @private
-      # @see RDF::Reader#each_statement
-      def each_statement(&block)
-        if block_given?
-          @xml.find('//trix:graph', OPTIONS).each do |graph_element|
-            read_statements(graph_element, &block)
-          end
-        end
-        enum_statement
       end
 
     protected
+
+      ##
+      # @private
+      def find_graphs(&block)
+        @xml.find('//trix:graph', OPTIONS).each(&block)
+      end
+
+      ##
+      # @private
+      def read_base
+        base = @xml.root.attributes.get_attribute_ns("http://www.w3.org/XML/1998/namespace", "base") if @xml && @xml.root
+        RDF::URI(base.value) if base
+      end
 
       ##
       # @private
@@ -66,14 +53,20 @@ module RDF::TriX
 
       ##
       # @private
-      def read_statements(graph_element, &block)
-        context = read_graph(graph_element)
-        graph_element.find('./trix:triple', OPTIONS).each do |triple_element|
-          triple = triple_element.children.select { |node| node.element? }[0..2]
-          triple = triple.map { |element| parse_element(element.name, element.attributes, element.content) }
-          triple << {:context => context} if context
-          block.call(RDF::Statement(*triple))
-        end
+      def triple_elements(element)
+        element.find('./trix:triple', OPTIONS)
+      end
+
+      ##
+      # @private
+      def element_elements(element)
+        element.children.select { |node| node.element? }
+      end
+
+      ##
+      # @private
+      def element_content(element)
+        element.content
       end
     end # LibXML
   end # Reader

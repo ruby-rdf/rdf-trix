@@ -8,9 +8,9 @@ module RDF::TriX
   # override the used implementation by passing in a `:library` option to
   # `Writer.new` or `Writer.open`.
   #
-  # [REXML]:    http://www.germane-software.com/software/rexml/
-  # [LibXML]:   http://libxml.rubyforge.org/rdoc/
-  # [Nokogiri]: http://nokogiri.org/
+  # [REXML]:    https://www.germane-software.com/software/rexml/
+  # [LibXML]:   https://rubygems.org/gems/libxml-ruby/
+  # [Nokogiri]: https://nokogiri.org/
   #
   # @example Loading TriX serialization support
   #   require 'rdf/trix'
@@ -42,7 +42,7 @@ module RDF::TriX
   #     end
   #   end
   #
-  # @see http://www.w3.org/2004/03/trix/
+  # @see https://www.w3.org/2004/03/trix/
   class Writer < RDF::Writer
     format RDF::TriX::Format
 
@@ -186,6 +186,31 @@ module RDF::TriX
     end
 
     ##
+    # Returns the TriX representation of a statement.
+    #
+    # @param  [RDF::Statement] statement
+    # @param  [Hash{Symbol => Object}] options ({})
+    # @return [String]
+    def format_statement(statement, **options)
+      format_triple(*statement.to_triple, **options)
+    end
+
+    ##
+    # Formats a referenced triple.
+    #
+    # @example
+    #     <<<s> <p> <o>>> <p> <o> .
+    #
+    # @param  [RDF::Statement] statment
+    # @param  [Hash{Symbol => Object}] options = ({})
+    # @return [String]
+    # @raise  [NotImplementedError] unless implemented in subclass
+    # @abstract
+    def format_embTriple(statement, **options)
+      format_statement(statement, **options)
+    end
+
+    ##
     # Returns the TriX representation of a triple.
     #
     # @param  [RDF::Resource]          subject
@@ -218,7 +243,7 @@ module RDF::TriX
     # @param  [Hash{Symbol => Object}] options
     # @return [Element]
     def format_uri(value, **options)
-      create_element(:uri, value.to_s)
+      create_element(:uri, value.relativize(base_uri).to_s)
     end
 
     ##
@@ -229,12 +254,14 @@ module RDF::TriX
     # @return [Element]
     def format_literal(value, **options)
       case
-        when value.has_datatype?
-          create_element(:typedLiteral, value.value.to_s, 'datatype' => value.datatype.to_s)
-        when value.has_language?
-          create_element(:plainLiteral, value.value.to_s, 'xml:lang' => value.language.to_s)
-        else
-          create_element(:plainLiteral, value.value.to_s)
+      when value.datatype == RDF.XMLLiteral
+        create_element(:typedLiteral, nil, 'datatype' => value.datatype.to_s, fragment: value.value.to_s)
+      when value.has_datatype?
+        create_element(:typedLiteral, value.value.to_s, 'datatype' => value.datatype.to_s)
+      when value.has_language?
+        create_element(:plainLiteral, value.value.to_s, 'xml:lang' => value.language.to_s)
+      else
+        create_element(:plainLiteral, value.value.to_s)
       end
     end
   end # Writer

@@ -1,4 +1,4 @@
-@base         <http://rubygems.org/gems/rdf-trix> .
+@base         <https://rubygems.org/gems/rdf-trix> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dc:   <http://purl.org/dc/terms/> .
@@ -7,23 +7,22 @@
 
 <> a doap:Project ;
   doap:name          "RDF::TriX" ;
-  doap:homepage      <http://rdf.rubyforge.org/trix/> ;
-  doap:license       <http://creativecommons.org/licenses/publicdomain/> ;
+  doap:homepage      <https://github.com/ruby-rdf/rdf-trix/> ;
+  doap:license       <https://unlicense.org/1.0/> ;
   doap:shortdesc     "TriX support for RDF.rb."@en ;
-  doap:description   "RDF.rb extension for parsing/serializing TriX data."@en ;
+  doap:description   "RDF::TriX is an TriX reader/writer for the RDF.rb library suite."@en ;
   doap:created       "2010-02-02" ;
-  doap:platform      "Ruby" ;
-  doap:download-page <http://rubygems.org/gems/rdf-trix/> ;
-  doap:bug-database  <http://github.com/ruby-rdf/rdf-trix/issues> ;
-  doap:blog          <http://ar.to/>, <http://blog.datagraph.org/> ;
-  doap:developer     <http://ar.to/#self> ;
-  doap:maintainer    <http://ar.to/#self> ;
-  doap:documenter    <http://ar.to/#self> ;
-  foaf:maker         <http://ar.to/#self> ;
-  dc:creator         <http://ar.to/#self> .
+  doap:programming-language "Ruby" ;
+  doap:download-page <> ;
+  doap:bug-database  <https://github.com/ruby-rdf/rdf-trix/issues> ;
+  doap:blog          <https://greggkellogg.net/> ;
+  doap:developer     <https://ar.to/#self>, <https://greggkellogg.net/> ;
+  doap:maintainer    <https://greggkellogg.net/> ;
+  doap:documenter    <https://ar.to/#self> ;
+  foaf:maker         <https://ar.to/#self> ;
+  dc:creator         <https://ar.to/#self> .
 
-<http://ar.to/#self> a foaf:Person ;
+<https://ar.to/#self> a foaf:Person ;
   foaf:name          "Arto Bendiken" ;
   foaf:mbox          <mailto:arto@bendiken.net> ;
-  foaf:made          <> ;
-  rdfs:isDefinedBy   <http://datagraph.org/bendiken/foaf> .
+  foaf:made          <>  .

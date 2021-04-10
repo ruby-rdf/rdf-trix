@@ -3,7 +3,7 @@ module RDF::TriX
     ##
     # Nokogiri implementation of the TriX reader.
     #
-    # @see http://nokogiri.org/
+    # @see https://nokogiri.org/
     module Nokogiri
       OPTIONS = {'trix' => Format::XMLNS}.freeze
 
@@ -20,40 +20,27 @@ module RDF::TriX
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(**options)
+      def initialize_xml(input, **options)
         require 'nokogiri' unless defined?(::Nokogiri)
-        @xml = ::Nokogiri::XML(@input)
+        @xml = ::Nokogiri::XML(input)
         log_error("Errors: #{@xml.errors.join('\n')}") unless @xml.errors.empty?
         @xml
       end
 
-      ##
-      # @private
-      # @see RDF::Reader#each_graph
-      def each_graph(&block)
-        if block_given?
-          @xml.xpath('//trix:graph', OPTIONS).each do |graph_element|
-            graph = RDF::Graph.new(read_graph(graph_element))
-            read_statements(graph_element) { |statement| graph << statement }
-            block.call(graph)
-          end
-        end
-        enum_graph
-      end
-
-      ##
-      # @private
-      # @see RDF::Reader#each_statement
-      def each_statement(&block)
-        if block_given?
-          @xml.xpath('//trix:graph', OPTIONS).each do |graph_element|
-            read_statements(graph_element, &block)
-          end
-        end
-        enum_statement
-      end
-
     protected
+
+      ##
+      # @private
+      def find_graphs(&block)
+        @xml.xpath('//trix:graph', OPTIONS).each(&block)
+      end
+
+      ##
+      # @private
+      def read_base
+        base = @xml.root.attribute_with_ns("base", "http://www.w3.org/XML/1998/namespace") if @xml && @xml.root
+        RDF::URI(base.to_s) if base
+      end
 
       ##
       # @private
@@ -64,14 +51,20 @@ module RDF::TriX
 
       ##
       # @private
-      def read_statements(graph_element, &block)
-        context = read_graph(graph_element)
-        graph_element.xpath('./trix:triple', OPTIONS).each do |triple_element|
-          triple = triple_element.children.select { |node| node.element? }[0..2]
-          triple = triple.map { |element| parse_element(element.name, element, element.content) }
-          triple << {:context => context} if context
-          block.call(RDF::Statement(*triple))
-        end
+      def triple_elements(element)
+        element.xpath('./trix:triple', OPTIONS)
+      end
+
+      ##
+      # @private
+      def element_elements(element)
+        element.children.select { |node| node.element? }
+      end
+
+      ##
+      # @private
+      def element_content(element)
+        element.content
       end
     end # Nokogiri
   end # Reader

@@ -1,22 +1,21 @@
-<http://ar.to/#self> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
-<http://ar.to/#self> <http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://datagraph.org/bendiken/foaf> .
-<http://ar.to/#self> <http://xmlns.com/foaf/0.1/made> <http://rubygems.org/gems/rdf-trix> .
-<http://ar.to/#self> <http://xmlns.com/foaf/0.1/mbox> <mailto:arto@bendiken.net> .
-<http://ar.to/#self> <http://xmlns.com/foaf/0.1/name> "Arto Bendiken" .
-<http://rubygems.org/gems/rdf-trix> <http://purl.org/dc/terms/creator> <http://ar.to/#self> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#blog> <http://ar.to/> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#blog> <http://blog.datagraph.org/> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#bug-database> <http://github.com/ruby-rdf/rdf-trix/issues> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#created> "2010-02-02" .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#description> "RDF.rb extension for parsing/serializing TriX data."@en .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#developer> <http://ar.to/#self> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#documenter> <http://ar.to/#self> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#download-page> <http://rubygems.org/gems/rdf-trix/> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#homepage> <http://rdf.rubyforge.org/trix/> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#license> <http://creativecommons.org/licenses/publicdomain/> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#maintainer> <http://ar.to/#self> .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#name> "RDF::TriX" .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#platform> "Ruby" .
-<http://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#shortdesc> "TriX support for RDF.rb."@en .
-<http://rubygems.org/gems/rdf-trix> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://usefulinc.com/ns/doap#Project> .
-<http://rubygems.org/gems/rdf-trix> <http://xmlns.com/foaf/0.1/maker> <http://ar.to/#self> .
+<https://rubygems.org/gems/rdf-trix> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://usefulinc.com/ns/doap#Project> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#name> "RDF::TriX" .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#homepage> <https://github.com/ruby-rdf/rdf-trix/> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#license> <https://unlicense.org/1.0/> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#shortdesc> "TriX support for RDF.rb."@en .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#description> "RDF::TriX is an TriX reader/writer for the RDF.rb library suite."@en .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#created> "2010-02-02" .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#programming-language> "Ruby" .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#download-page> <https://rubygems.org/gems/rdf-trix> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#bug-database> <https://github.com/ruby-rdf/rdf-trix/issues> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#blog> <https://greggkellogg.net/> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#developer> <https://ar.to/#self> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#developer> <https://greggkellogg.net/> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#maintainer> <https://greggkellogg.net/> .
+<https://rubygems.org/gems/rdf-trix> <http://usefulinc.com/ns/doap#documenter> <https://ar.to/#self> .
+<https://rubygems.org/gems/rdf-trix> <http://xmlns.com/foaf/0.1/maker> <https://ar.to/#self> .
+<https://rubygems.org/gems/rdf-trix> <http://purl.org/dc/terms/creator> <https://ar.to/#self> .
+<https://ar.to/#self> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://ar.to/#self> <http://xmlns.com/foaf/0.1/name> "Arto Bendiken" .
+<https://ar.to/#self> <http://xmlns.com/foaf/0.1/mbox> <mailto:arto@bendiken.net> .
+<https://ar.to/#self> <http://xmlns.com/foaf/0.1/made> <https://rubygems.org/gems/rdf-trix> .

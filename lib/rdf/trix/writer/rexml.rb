@@ -3,7 +3,7 @@ module RDF::TriX
     ##
     # REXML implementation of the TriX writer.
     #
-    # @see http://www.germane-software.com/software/rexml/
+    # @see https://www.germane-software.com/software/rexml/
     module REXML
       ##
       # Returns the name of the underlying XML library.
@@ -29,7 +29,9 @@ module RDF::TriX
       #
       # @return [void]
       def write_prologue
-        @trix = @xml.add_element('TriX', 'xmlns' => Format::XMLNS)
+        options = {"xmlns" => Format::XMLNS, "xml" => "http://www.w3.org/XML/1998/namespace"}
+        options["xml:base"] = base_uri.to_s if base_uri
+        @trix = @xml.add_element('TriX', options)
         super
       end
 
@@ -85,8 +87,10 @@ module RDF::TriX
       # @return [REXML::Element]
       def create_element(name, content = nil, attributes = {}, &block)
         element = ::REXML::Element.new(name.to_s, nil, @xml.context)
+        fragment = attributes.delete(:fragment)
         attributes.each { |k, v| element.add_attribute(k.to_s, v) }
         element.text = content.to_s unless content.nil?
+        element << fragment if fragment
         block.call(element) if block_given?
         element
       end

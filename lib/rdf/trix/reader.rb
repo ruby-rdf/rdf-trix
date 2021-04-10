@@ -1,3 +1,5 @@
+require 'rdf/xsd'
+
 module RDF::TriX
   ##
   # TriX parser.
@@ -8,9 +10,9 @@ module RDF::TriX
   # can explicitly override the used implementation by passing in a
   # `:library` option to `Reader.new` or `Reader.open`.
   #
-  # [REXML]:    http://www.germane-software.com/software/rexml/
-  # [LibXML]:   http://libxml.rubyforge.org/rdoc/
-  # [Nokogiri]: http://nokogiri.org/
+  # [REXML]:    https://www.germane-software.com/software/rexml/
+  # [LibXML]:   https://rubygems.org/gems/libxml-ruby/
+  # [Nokogiri]: https://nokogiri.org/
   #
   # @example Loading TriX parsing support
   #   require 'rdf/trix'
@@ -46,7 +48,7 @@ module RDF::TriX
   #     end
   #   end
   #
-  # @see http://www.w3.org/2004/03/trix/
+  # @see https://www.w3.org/2004/03/trix/
   class Reader < RDF::Reader
     format RDF::TriX::Format
 
@@ -57,12 +59,20 @@ module RDF::TriX
     attr_reader :implementation
 
     ##
+    # Returns the Base URI as provided, or found from xml:base
+    #
+    # @return [RDF::URI]
+    attr_reader :base_uri
+
+    ##
     # Initializes the TriX reader instance.
     #
     # @param  [IO, File, String] input
     # @param  [Hash{Symbol => Object}] options
     #   any additional options (see `RDF::Reader#initialize`)
     # @option options [Symbol] :library (:nokogiri, :libxml, or :rexml)
+    # @option options [#to_s]    :base_uri     (nil)
+    #   the base URI to use when resolving relative URIs
     # @yield  [reader] `self`
     # @yieldparam  [RDF::Reader] reader
     # @yieldreturn [void] ignored
@@ -97,7 +107,7 @@ module RDF::TriX
         self.extend(@implementation)
 
         begin
-          initialize_xml(**options)
+          initialize_xml(input, **options)
         rescue
           log_error("Malformed document: #{$!.message}")
         end
@@ -109,6 +119,47 @@ module RDF::TriX
           end
         end
       end
+    end
+
+    ##
+    # @private
+    # @see RDF::Reader#each_graph
+    def each_graph(&block)
+      if block_given?
+        base = read_base
+        @base_uri = base_uri ? base : base_uri.join(base)
+        find_graphs do |graph_element|
+          graph_name = read_graph(graph_element)
+          graph_name = base_uri.join(graph_name) if
+            base_uri && graph_name && graph_name.relative?
+          graph = RDF::Graph.new(graph_name: graph_name)
+          read_statements(graph_element) { |statement| graph << statement }
+          block.call(graph)
+        end
+
+        if validate? && log_statistics[:error]
+          raise RDF::ReaderError, "Errors found during processing"
+        end
+      end
+      enum_graph
+    end
+
+    ##
+    # @private
+    # @see RDF::Reader#each_statement
+    def each_statement(&block)
+      if block_given?
+        base = read_base
+        @base_uri = base_uri ? base_uri.join(base) : base
+        find_graphs do |graph_element|
+          read_statements(graph_element, &block)
+        end
+
+        if validate? && log_statistics[:error]
+          raise RDF::ReaderError, "Errors found during processing"
+        end
+      end
+      enum_statement
     end
 
     ##
@@ -136,29 +187,61 @@ module RDF::TriX
     end
 
     ##
+    # Yield each statement from a graph
+    #
+    # @param [Object] element
+    # @yield statement
+    # @yieldparam [RDF::Statement] statement
+    def read_statements(graph_element, &block)
+      graph_name = read_graph(graph_element)
+      graph_name = base_uri.join(graph_name) if
+        base_uri && graph_name && graph_name.relative?
+      triple_elements(graph_element).each do |triple_element|
+        block.call(read_triple(triple_element, graph_name: graph_name))
+      end
+    end
+
+    ##
+    # Read a <triple>
+    # @param  [Hash{String => Object}] element
+    # @return [RDF::Statement] statement
+    def read_triple(element, graph_name: nil)
+      terms = element_elements(element)[0..2].map do |element|
+        parse_element(element.name, element, element_content(element))
+      end
+      RDF::Statement(*terms, graph_name: graph_name)
+    end
+
+    ##
     # Returns the RDF value of the given TriX element.
     #
     # @param  [String] name
-    # @param  [Hash{String => Object}] attributes
+    # @param  [Hash{String => Object}] element
     # @param  [String] content
     # @return [RDF::Value]
-    def parse_element(name, attributes, content)
+    def parse_element(name, element, content)
       case name.to_sym
         when :id
-          RDF::Node.new(content.strip)
+          RDF::Node.intern(content.strip)
         when :uri
           uri = RDF::URI.new(content.strip) # TODO: interned URIs
+          uri = base_uri.join(uri) if base_uri && uri.relative?
           uri.validate!     if validate?
           uri.canonicalize! if canonicalize?
           uri
+        when :triple # RDF-star
+          log_error "expected 'triple' element" unless @options[:rdfstar]
+          read_triple(element)
         when :typedLiteral
-          literal = RDF::Literal.new(content, :datatype => attributes['datatype'])
+          content = element.children.c14nxl(library: @library) if
+            element['datatype'] == RDF.XMLLiteral
+          literal = RDF::Literal.new(content, :datatype => RDF::URI(element['datatype']))
           literal.validate!     if validate?
           literal.canonicalize! if canonicalize?
           literal
         when :plainLiteral
           literal = case
-            when lang = attributes['xml:lang'] || attributes['lang']
+            when lang = element['xml:lang'] || element['lang']
               RDF::Literal.new(content, :language => lang)
             else
               RDF::Literal.new(content)
@@ -167,7 +250,7 @@ module RDF::TriX
           literal.canonicalize! if canonicalize?
           literal
         else
-          log_error "expected element name to be 'id', 'uri', 'typedLiteral', or 'plainLiteral', but got #{name.inspect}"
+          log_error "expected element name to be 'id', 'uri', 'triple', 'typedLiteral', or 'plainLiteral', but got #{name.inspect}"
       end
     end
   end # Reader

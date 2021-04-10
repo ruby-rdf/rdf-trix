@@ -1,8 +1,22 @@
 $:.unshift(File.expand_path("../../lib", __FILE__))
 require "bundler/setup"
 require 'rspec'
+require 'matchers'
 require 'rdf/trix'
 require 'rdf/spec'
+
+begin
+  require 'simplecov'
+  require 'coveralls'
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+  ])
+  SimpleCov.start do
+    add_filter "/spec/"
+  end
+rescue LoadError
+end
 
 RSpec.configure do |config|
   config.include(RDF::Spec::Matchers)
