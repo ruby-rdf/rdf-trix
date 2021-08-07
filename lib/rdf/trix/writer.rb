@@ -206,7 +206,7 @@ module RDF::TriX
     # @return [String]
     # @raise  [NotImplementedError] unless implemented in subclass
     # @abstract
-    def format_embTriple(statement, **options)
+    def format_quotedTriple(statement, **options)
       format_statement(statement, **options)
     end
 
