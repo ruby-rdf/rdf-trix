@@ -104,9 +104,9 @@ Write a repository to a file:
 
 ## Dependencies
 
-* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.1)
-  [Nokogiri](https://rubygems.org/gems/nokogiri) (~> 1.10)
-  [LibXML](https://rubygems.org/gems/libxml) (>= 3.0)
+* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.2)
+  [Nokogiri](https://rubygems.org/gems/nokogiri) (~> 1.12)
+  [LibXML](https://rubygems.org/gems/libxml) (>= 3.2)
 
 ## Installation
 
