@@ -17,7 +17,7 @@ Install with `gem install rdf-trix`
 
 * 100% free and unencumbered [public domain](https://unlicense.org/) software.
 * Implements a complete parser and serializer for [TriX][].
-* Compatible with Ruby >= 2.4, and JRuby 1.7+.
+* Compatible with Ruby >= 2.6, and JRuby 9+.
 
 ### Support for xml:base
 
