@@ -189,7 +189,7 @@ module RDF::TriX
     ##
     # Yield each statement from a graph
     #
-    # @param [Object] element
+    # @param [Object] graph_element
     # @yield statement
     # @yieldparam [RDF::Statement] statement
     def read_statements(graph_element, &block)

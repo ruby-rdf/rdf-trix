@@ -201,12 +201,12 @@ module RDF::TriX
     # @example
     #     <<<s> <p> <o>>> <p> <o> .
     #
-    # @param  [RDF::Statement] statment
+    # @param  [RDF::Statement] statement
     # @param  [Hash{Symbol => Object}] options = ({})
     # @return [String]
     # @raise  [NotImplementedError] unless implemented in subclass
     # @abstract
-    def format_embTriple(statement, **options)
+    def format_quotedTriple(statement, **options)
       format_statement(statement, **options)
     end
 
