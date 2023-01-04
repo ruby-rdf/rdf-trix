@@ -3,7 +3,6 @@ source "https://rubygems.org"
 gemspec
 
 gem 'rdf',      git: "https://github.com/ruby-rdf/rdf",       branch: "develop"
-gem "nokogiri"
 
 group :development do
   gem 'ebnf',               git: "https://github.com/dryruby/ebnf",               branch: "develop"

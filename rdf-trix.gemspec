@@ -36,7 +36,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec',             '~> 3.10'
   gem.add_development_dependency 'rspec-its',         '~> 1.3'
   gem.add_development_dependency 'yard' ,             '~> 0.9'
-  gem.add_development_dependency 'nokogiri',          '~> 1.10' # 1.12 Ruby >= 2.5
+  gem.add_development_dependency 'nokogiri',          '~> 1.13', '>= 1.13.4'
   gem.add_development_dependency 'libxml-ruby',       '~> 3.2' unless is_java
 
   gem.post_install_message       = nil
