@@ -2,7 +2,7 @@
 
 [TriX][] reader/writer for [RDF.rb][RDF.rb] .
 
-[![Gem Version](https://badge.fury.io/rb/rdf-trix.png)](https://badge.fury.io/rb/rdf-trix)
+[![Gem Version](https://badge.fury.io/rb/rdf-trix.svg)](https://badge.fury.io/rb/rdf-trix)
 [![Build Status](https://github.com/ruby-rdf/rdf-trix/workflows/CI/badge.svg?branch=develop)](https://github.com/ruby-rdf/rdf-trix/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/ruby-rdf/rdf-trix/badge.svg?branch=develop)](https://coveralls.io/github/ruby-rdf/rdf-trix?branch=develop)
 [![Gitter chat](https://badges.gitter.im/ruby-rdf/rdf.png)](https://gitter.im/ruby-rdf/rdf)
