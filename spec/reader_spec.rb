@@ -250,7 +250,7 @@ describe RDF::TriX::Reader do
           },
         }.each do |name, params|
           it name do
-            res = RDF::OrderedRepo.new << RDF::NQuads::Reader.new(params[:expect])
+            res = RDF::Repository.new << RDF::NQuads::Reader.new(params[:expect])
             expect(parse(params[:input], library: impl.to_sym, **params)).to be_equivalent_graph(res, logger: @logger)
           end unless Array(params[:except]).include?(impl.to_sym)
         end
@@ -466,7 +466,7 @@ describe RDF::TriX::Reader do
             },
           }.each do |name, params|
             it name do
-              res = RDF::OrderedRepo.new << RDF::NQuads::Reader.new(params[:expect], rdfstar: true)
+              res = RDF::Repository.new << RDF::NQuads::Reader.new(params[:expect], rdfstar: true)
               expect(parse(params[:input], library: impl.to_sym, rdfstar: true, **params)).to be_equivalent_graph(res, logger: @logger)
             end unless Array(params[:except]).include?(impl.to_sym)
           end
@@ -482,7 +482,7 @@ describe RDF::TriX::Reader do
       validate: false,
       canonicalize: false,
     }.merge(options)
-    graph = options[:graph] || RDF::OrderedRepo.new
+    graph = options[:graph] || RDF::Repository.new
     RDF::TriX::Reader.new(input, **options).each do |statement|
       graph << statement
     end

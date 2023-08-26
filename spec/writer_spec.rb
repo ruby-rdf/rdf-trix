@@ -68,9 +68,9 @@ describe RDF::TriX::Writer do
           },
         }.each do |name, params|
           it name do
-            graph = RDF::OrderedRepo.new << RDF::NQuads::Reader.new(params[:input])
+            graph = RDF::Repository.new << RDF::NQuads::Reader.new(params[:input])
             trix = graph.dump(:trix)
-            graph2 = RDF::OrderedRepo.new << RDF::TriX::Reader.new(trix)
+            graph2 = RDF::Repository.new << RDF::TriX::Reader.new(trix)
             expect(graph2).to be_equivalent_graph(graph)
           end
         end
@@ -81,7 +81,7 @@ describe RDF::TriX::Writer do
           nt = %(
             <http://release/a> <http://foo/ref> <http://release/b> .
           )
-          graph = RDF::OrderedRepo.new << RDF::NQuads::Reader.new(nt)
+          graph = RDF::Repository.new << RDF::NQuads::Reader.new(nt)
           graph.dump(:trix, base_uri: "http://release/")
         end
 
@@ -193,9 +193,9 @@ describe RDF::TriX::Writer do
           },
         }.each do |name, params|
           it name do
-            graph = RDF::OrderedRepo.new {|g| g << params[:input]}
+            graph = RDF::Repository.new {|g| g << params[:input]}
             trix = graph.dump(:trix)
-            graph2 = RDF::OrderedRepo.new << RDF::TriX::Reader.new(trix, rdfstar: true)
+            graph2 = RDF::Repository.new << RDF::TriX::Reader.new(trix, rdfstar: true)
             expect(graph2).to be_equivalent_graph(graph)
           end
         end
