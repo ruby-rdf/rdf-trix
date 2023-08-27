@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version      = '>= 3.0'
   gem.add_runtime_dependency     'rdf',               '~> 3.3'
-  gem.add_runtime_dependency     'rdf-xsd',           '~> 3.2'
+  gem.add_runtime_dependency     'rdf-xsd',           '~> 3.3'
   gem.add_development_dependency 'rdf-spec',          '~> 3.3'
   gem.add_development_dependency 'rdf-trig',          '~> 3.3'
   gem.add_development_dependency 'rdf-ordered-repo',  '~> 3.3'
