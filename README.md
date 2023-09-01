@@ -2,7 +2,7 @@
 
 [TriX][] reader/writer for [RDF.rb][RDF.rb] .
 
-[![Gem Version](https://badge.fury.io/rb/rdf-trix.png)](https://badge.fury.io/rb/rdf-trix)
+[![Gem Version](https://badge.fury.io/rb/rdf-trix.svg)](https://badge.fury.io/rb/rdf-trix)
 [![Build Status](https://github.com/ruby-rdf/rdf-trix/workflows/CI/badge.svg?branch=develop)](https://github.com/ruby-rdf/rdf-trix/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/ruby-rdf/rdf-trix/badge.svg?branch=develop)](https://coveralls.io/github/ruby-rdf/rdf-trix?branch=develop)
 [![Gitter chat](https://badges.gitter.im/ruby-rdf/rdf.png)](https://gitter.im/ruby-rdf/rdf)
@@ -17,7 +17,7 @@ Install with `gem install rdf-trix`
 
 * 100% free and unencumbered [public domain](https://unlicense.org/) software.
 * Implements a complete parser and serializer for [TriX][].
-* Compatible with Ruby >= 2.6, and JRuby 9+.
+* Compatible with Ruby >= 3.0, and JRuby 9+.
 
 ### Support for xml:base
 
@@ -91,9 +91,9 @@ Write a repository to a file:
     end
 
 ## Dependencies
-* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.1)
-* Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.10)
-* Soft dependency on [Libxml-Ruby](https://rubygems.org/gems/libxml-ruby) (>= 3.0)
+* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.3)
+* Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.15)
+* Soft dependency on [Libxml-Ruby](https://rubygems.org/gems/libxml-ruby) (>= 4.1)
 
 ## Documentation
 
@@ -104,9 +104,9 @@ Write a repository to a file:
 
 ## Dependencies
 
-* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.2)
-  [Nokogiri](https://rubygems.org/gems/nokogiri) (~> 1.12)
-  [LibXML](https://rubygems.org/gems/libxml) (>= 3.2)
+* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.3)
+  [Nokogiri](https://rubygems.org/gems/nokogiri) (~> 1.15)
+  [LibXML](https://rubygems.org/gems/libxml) (>= 4.1)
 
 ## Installation
 
