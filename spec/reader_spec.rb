@@ -2,7 +2,6 @@
 $:.unshift "."
 require 'spec_helper'
 require 'rdf/spec/reader'
-require 'rdf/ordered_repo'
 
 describe RDF::TriX::Reader do
   let(:logger) {RDF::Spec.logger}

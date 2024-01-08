@@ -8,7 +8,6 @@ group :development do
   gem 'ebnf',               git: "https://github.com/dryruby/ebnf",               branch: "develop"
   gem 'json-ld',            git: "https://github.com/ruby-rdf/json-ld",           branch: "develop"
   gem 'rdf-isomorphic',     git: "https://github.com/ruby-rdf/rdf-isomorphic",    branch: "develop"
-  gem 'rdf-ordered-repo',   git: "https://github.com/ruby-rdf/rdf-ordered-repo",  branch: "develop"
   gem 'rdf-spec',           git: "https://github.com/ruby-rdf/rdf-spec",          branch: "develop"
   gem 'rdf-trig',           git: "https://github.com/ruby-rdf/rdf-trig",          branch: "develop"
   gem 'rdf-turtle',         git: "https://github.com/ruby-rdf/rdf-turtle",        branch: "develop"

@@ -32,7 +32,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     'rdf-xsd',           '~> 3.3'
   gem.add_development_dependency 'rdf-spec',          '~> 3.3'
   gem.add_development_dependency 'rdf-trig',          '~> 3.3'
-  gem.add_development_dependency 'rdf-ordered-repo',  '~> 3.3'
   gem.add_development_dependency 'rspec',             '~> 3.12'
   gem.add_development_dependency 'rspec-its',         '~> 1.3'
   gem.add_development_dependency 'yard' ,             '~> 0.9'

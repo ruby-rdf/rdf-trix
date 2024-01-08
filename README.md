@@ -90,6 +90,10 @@ Write a repository to a file:
        writer << repo
     end
 
+## Change Log
+
+See [Release Notes on GitHub](https://github.com/ruby-rdf/rdf-trix/releases)
+
 ## Dependencies
 * [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.3)
 * Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.15)
@@ -101,12 +105,6 @@ Write a repository to a file:
   * {RDF::TriX::Format}
   * {RDF::TriX::Reader}
   * {RDF::TriX::Writer}
-
-## Dependencies
-
-* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.3)
-  [Nokogiri](https://rubygems.org/gems/nokogiri) (~> 1.15)
-  [LibXML](https://rubygems.org/gems/libxml) (>= 4.1)
 
 ## Installation
 

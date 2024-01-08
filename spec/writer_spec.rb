@@ -1,7 +1,6 @@
 $:.unshift "."
 require 'spec_helper'
 require 'rdf/spec/writer'
-require 'rdf/ordered_repo'
 
 describe RDF::TriX::Writer do
   let!(:doap_nt) {File.expand_path("../../etc/doap.nt", __FILE__)}
